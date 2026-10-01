@@ -1,1 +1,14 @@
-
+ID,Price,Description,Category,Tags
+1,280.25,TI-84 Calculator,DEVICE,calculator-mathematics-calculus-algrebra-texas Instruments-learning materials-math
+2,45.99,Beginners Guide to Integral Calculus,BOOK,textbook-calculus-class materials-integral calclus-calc-integral calc-learning material-math-stem
+3,45.99,Beginners Guide to AP Physics,BOOK,textbook-ap-physics-ap physics-class materials-learning material-science-math-stem
+4,63.75,The Classics of English Literature,BOOK,textbook-english-literature-ap-ap lit-ap literature-learning material-sociology-social studies-
+5,49.16,How to Crush your Exams,BOOK,self help-study guide-studying-learning-guide
+6,18.99,Introduction to Javascript,BOOK,textbook-coding-computer science-it-learning materials-self help-javascript-web-
+7,18.99,Introduction to Python,BOOK,textbook-coding-computer science-it-backend-learning materials-python-web-
+8,12.99,Bic 25 Pack of Mechanical Pencils,TOOL,pencil-writing-mechanical-mechanical pencil-learning materials-writing materials-
+9,6.99,White Eraser 4 Pack,TOOL,eraser-writing-learning materials-writing materials-
+10,150.99,Casio FX 260 Calculator,DEVICE,calculator-mathematics-calculus-algrebra-learning materials-casio-solar calculator-solar-math
+11,80.99,Lenovo ThinkPad T14s,DEVICE,computer-rental-
+12,5.99,Three Ring Binder,TOOL,writing materials-notebook-paper-class materials-binder-storage-organization
+13,5.99,Composition Notebook,TOOL,writing materials-notebook-paper-class materials-composition notebook-composition-science-writing-note taking-notes-
