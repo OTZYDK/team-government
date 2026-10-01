@@ -1,1 +1,204 @@
+<!DOCTYPE html> 
 
+<html lang="en"> 
+
+<head> 
+
+    <meta charset="UTF-8"> 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+ 
+
+    <title>Dallas College Bookstore</title> 
+
+ 
+
+    <link rel="stylesheet" href="css/styles.css"> 
+
+</head> 
+
+ 
+
+<body> 
+
+ 
+
+    <!-- Header --> 
+
+    <header> 
+
+        <h1>Dallas College Bookstore</h1> 
+
+        <p>Your one-stop shop for books, supplies, and college merchandise.</p> 
+
+    </header> 
+
+ 
+
+    <!-- Navigation --> 
+
+    <nav> 
+
+        <a href="index.html">Home</a> 
+
+        <a href="#books">Books</a> 
+
+        <a href="#supplies">Supplies</a> 
+
+        <a href="#cart">Cart</a> 
+
+    </nav> 
+
+ 
+
+    <!-- Main Content --> 
+
+    <main> 
+
+ 
+
+        <!-- Welcome Section --> 
+
+        <section class="welcome"> 
+
+            <h2>Welcome to the Dallas College Bookstore</h2> 
+
+            <p> 
+
+                Find the textbooks, school supplies, and college 
+
+                merchandise you need for your classes. 
+
+            </p> 
+
+        </section> 
+
+ 
+
+        <!-- Products --> 
+
+        <section id="books"> 
+
+            <h2>Featured Products</h2> 
+
+ 
+
+            <div class="products"> 
+
+ 
+
+                <div class="product"> 
+
+                    <h3>Computer Science Textbook</h3> 
+
+                    <p>Introduction to Computer Programming.</p> 
+
+                    <p class="price">$75.00</p> 
+
+                    <button onclick="addToCart('Computer Science Textbook', 75.00)">
+    Add to Cart
+</button>
+
+                </div> 
+
+ 
+
+                <div class="product"> 
+
+                    <h3>College Notebook</h3> 
+
+                    <p>Dallas College student notebook.</p> 
+
+                    <p class="price">$8.00</p> 
+
+                    <button onclick="addToCart('College Notebook', 8.00)">
+    Add to Cart
+</button>
+
+                </div> 
+
+ 
+
+                <div class="product"> 
+
+                    <h3>Backpack</h3> 
+
+                    <p>Dallas College backpack for students.</p> 
+
+                    <p class="price">$35.00</p> 
+
+                    <button onclick="addToCart('Backpack', 35.00)">
+    Add to Cart
+</button>
+
+                </div> 
+
+ 
+
+                <div class="product"> 
+
+                    <h3>Calculator</h3> 
+
+                    <p>Scientific calculator for college courses.</p> 
+
+                    <p class="price">$25.00</p> 
+
+                    <button onclick="addToCart('Calculator', 25.00)">
+    Add to Cart
+</button>
+
+                </div> 
+
+ 
+
+            </div> 
+
+        </section> 
+
+ 
+
+        <!-- Supplies --> 
+
+        <section id="supplies" class="welcome"> 
+
+            <h2>School Supplies</h2> 
+
+            <p> 
+
+                Shop notebooks, calculators, pens, backpacks, 
+
+                and other supplies for your classes. 
+
+            </p> 
+
+        </section> 
+
+ 
+
+        <!-- Cart --> 
+
+        <section id="cart" class="welcome"> 
+
+            <h2>Shopping Cart</h2> 
+
+            <p>Your cart is currently empty.</p> 
+
+            <button>View Cart</button> 
+
+        </section> 
+
+ 
+
+    </main> 
+
+ 
+
+        <footer> 
+        <p>&copy; 2026 Dallas College Bookstore</p> 
+    </footer>
+
+    <script src="app.js"></script>
+
+</body> 
+</html>

@@ -1,103 +1,265 @@
-Dallas College Bookstore - Main Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-}
+/* Dallas College Bookstore */ 
 
-/* Header */
-header {
-  background-color: #006633;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-header h1 {
-  margin-bottom: 10px
-}
+ 
 
-/* Navigation */
-nav {
-  background-color: #006747;
-  padding: 12px;
-  text-align: center;
-}
-nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: bold;
-}
-nav a: hover {
-  text-decoration: underline;
-}
+* { 
 
-/* Main content */
-main {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
-}
-.welcome {
-  background- color: white;
-  padding: 30px;
-  text-align: center;
-  border-radius: 8px;
-  margin-bottom: 30px;
-}
+    margin: 0; 
 
-/* Products */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-.product {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0,0.1);
-}
-.product h3 {
-  margin-bottom: 10px;
-}
-.price {
-  font-weight: bold;
-  margin: 10px 0;
-}
+    padding: 0; 
 
-/* Buttons */
-button {
-  background-color: #006747;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button: hover {
-  background-color: #004d35;
-}
+    box-sizing: border-box; 
 
-/* Footer */
-footer {
-  background-color: #003b5c;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
 } 
 
-  
-  
-    
-  
-  
+ 
 
+body { 
 
-  
+    font-family: Arial, sans-serif; 
+
+    background-color: #f4f4f4; 
+
+    color: #333; 
+
+} 
+
+ 
+
+/* Header */ 
+
+header { 
+
+    background-color: #003b5c; 
+
+    color: white; 
+
+    padding: 25px; 
+
+    text-align: center; 
+
+} 
+
+ 
+
+header h1 { 
+
+    font-size: 32px; 
+
+    margin-bottom: 8px; 
+
+} 
+
+ 
+
+/* Navigation */ 
+
+nav { 
+
+    background-color: #006747; 
+
+    padding: 15px; 
+
+    text-align: center; 
+
+} 
+
+ 
+
+nav a { 
+
+    color: white; 
+
+    text-decoration: none; 
+
+    margin: 0 15px; 
+
+    font-weight: bold; 
+
+} 
+
+ 
+
+nav a:hover { 
+
+    text-decoration: underline; 
+
+} 
+
+ 
+
+/* Main section */ 
+
+main { 
+
+    max-width: 1200px; 
+
+    margin: 30px auto; 
+
+    padding: 20px; 
+
+} 
+
+ 
+
+.welcome { 
+
+    background-color: white; 
+
+    padding: 30px; 
+
+    text-align: center; 
+
+    border-radius: 8px; 
+
+    margin-bottom: 30px; 
+
+} 
+
+ 
+
+.welcome h2 { 
+
+    color: #003b5c; 
+
+    margin-bottom: 10px; 
+
+} 
+
+ 
+
+/* Product section */ 
+
+.products { 
+
+    display: grid; 
+
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+
+    gap: 20px; 
+
+} 
+
+ 
+
+.product { 
+
+    background-color: white; 
+
+    padding: 20px; 
+
+    border-radius: 8px; 
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); 
+
+} 
+
+ 
+
+.product h3 { 
+
+    color: #003b5c; 
+
+    margin-bottom: 10px; 
+
+} 
+
+ 
+
+.product p { 
+
+    margin-bottom: 10px; 
+
+} 
+
+ 
+
+.price { 
+
+    font-weight: bold; 
+
+    font-size: 18px; 
+
+    margin-bottom: 15px; 
+
+} 
+
+ 
+
+/* Buttons */ 
+
+button { 
+
+    background-color: #006747; 
+
+    color: white; 
+
+    border: none; 
+
+    padding: 10px 18px; 
+
+    border-radius: 5px; 
+
+    cursor: pointer; 
+
+    font-size: 15px; 
+
+} 
+
+ 
+
+button:hover { 
+
+    background-color: #004d35; 
+
+} 
+
+ 
+
+/* Footer */ 
+
+footer { 
+
+    background-color: #003b5c; 
+
+    color: white; 
+
+    text-align: center; 
+
+    padding: 20px; 
+
+    margin-top: 40px; 
+
+} 
+
+ 
+
+/* Mobile screens */ 
+
+@media (max-width: 600px) { 
+
+    header h1 { 
+
+        font-size: 25px; 
+
+    } 
+
+ 
+
+    nav a { 
+
+        display: block; 
+
+        margin: 8px; 
+
+    } 
+
+ 
+
+    main { 
+
+        padding: 10px; 
+
+    } 
+
+} 
