@@ -76,7 +76,7 @@
 
  
 
-        <!-- Products --> 
+        <!-- Products - now populated by JavaScript from the Java backend --> 
 
         <section id="books"> 
 
@@ -84,67 +84,12 @@
 
  
 
-            <div class="products"> 
+            <div id="store-container" class="products"> 
 
- 
-
-                <div class="product"> 
-
-                    <h3>Computer Science Textbook</h3> 
-
-                    <p>Introduction to Computer Programming.</p> 
-
-                    <p class="price">$75.00</p> 
-
-                    <button>Add to Cart</button> 
+                     <p>Loading items...</p>
 
                 </div> 
 
- 
-
-                <div class="product"> 
-
-                    <h3>College Notebook</h3> 
-
-                    <p>Dallas College student notebook.</p> 
-
-                    <p class="price">$8.00</p> 
-
-                    <button>Add to Cart</button> 
-
-                </div> 
-
- 
-
-                <div class="product"> 
-
-                    <h3>Backpack</h3> 
-
-                    <p>Dallas College backpack for students.</p> 
-
-                    <p class="price">$35.00</p> 
-
-                    <button>Add to Cart</button> 
-
-                </div> 
-
- 
-
-                <div class="product"> 
-
-                    <h3>Calculator</h3> 
-
-                    <p>Scientific calculator for college courses.</p> 
-
-                    <p class="price">$25.00</p> 
-
-                    <button>Add to Cart</button> 
-
-                </div> 
-
- 
-
-            </div> 
 
         </section> 
 
@@ -194,7 +139,9 @@
 
     </footer> 
 
- 
+    <!-- Load app.js LAST so #store-container already exists in the DOM.
+         If placed in <head>, getElementById would return null. -->
+    <script src="js/app.js"></script>
 
 </body> 
 
