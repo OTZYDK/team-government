@@ -2,116 +2,42 @@
 
  
 
-let cart = []; 
+// frontend/js/app.js
+document.addEventListener("DOMContentLoaded", () => {
+    fetchItems();
+});
 
-let total = 0; 
+function fetchItems() {
+    fetch('http://localhost:8080/api/items')
+        .then(response => response.json())
+        .then(items => {
+            displayItems(items);
+        })
+        .catch(error => {
+            console.error("Error fetching items:", error);
+            document.getElementById("store-container").innerHTML =
+                "<p>Could not load items. Is the Java server running?</p>";
+        });
+}
 
- 
+function displayItems(items) {
+    const container = document.getElementById("store-container");
+    container.innerHTML = "";
 
-// Add a product to the shopping cart 
+    items.forEach(item => {
+        const tagsHtml = item.tags
+            .map(tag => `<span class="tag">${tag}</span>`)
+            .join("");
 
-function addToCart(name, price) { 
+        const card = `
+            <div class="item-card">
+                <span class="item-category">${item.category}</span>
+                <h3>${item.description}</h3>
+                <p class="price">$${item.price.toFixed(2)}</p>
+                <div class="tags">${tagsHtml}</div>
+            </div>
+        `;
+        container.innerHTML += card;
+    });
+}
 
-    cart.push({ 
-
-        name: name, 
-
-        price: price 
-
-    }); 
-
- 
-
-    total += price; 
-
- 
-
-    updateCart(); 
-
- 
-
-    alert(name + " has been added to your cart!"); 
-
-} 
-
- 
-
-// Update the cart display 
-
-function updateCart() { 
-
-    const cartList = document.getElementById("cart-list"); 
-
-    const cartTotal = document.getElementById("cart-total"); 
-
- 
-
-    if (!cartList || !cartTotal) { 
-
-        return; 
-
-    } 
-
- 
-
-    cartList.innerHTML = ""; 
-
- 
-
-    cart.forEach(function(item, index) { 
-
-        const li = document.createElement("li"); 
-
- 
-
-        li.innerHTML = ` 
-
-            ${item.name} - $${item.price.toFixed(2)} 
-
-            <button onclick="removeFromCart(${index})">Remove</button> 
-
-        `; 
-
- 
-
-        cartList.appendChild(li); 
-
-    }); 
-
- 
-
-    cartTotal.textContent = "Total: $" + total.toFixed(2); 
-
-} 
-
- 
-
-// Remove an item from the cart 
-
-function removeFromCart(index) { 
-
-    total -= cart[index].price; 
-
-    cart.splice(index, 1); 
-
- 
-
-    updateCart(); 
-
-} 
-
- 
-
-// Clear the entire cart 
-
-function clearCart() { 
-
-    cart = []; 
-
-    total = 0; 
-
- 
-
-    updateCart(); 
-
-} 
