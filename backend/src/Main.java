@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.OutputStream;       // for writing raw bytes to use the HTTP server
+import java.net.InetSocketAddress; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
+
+import com.sun.net.httpserver.HttpServer;   // The Http server
+import com.sun.net.httpserver.HttpHandler;  // the interface
+import com.sun.net.httpserver.HttpExchange; // Deals with the conversation of one browser request (one request + response)
 
 
 import java.io.File;                  // Import the File class
@@ -55,58 +61,109 @@ public class Main {
 	    }
 	}
 
-	public static void main(String[] args) {
-		/*
-		ITEM A is constructed with the normal class constructor, where the fields are provided directly to create an object
-		ITEM B is constructed with a String holding all data fields, this constructor splits the string and uses that data as its fields
-		ITEM C is constructed by recieving all the fields from ITEM B as a string, then loading them all as its values
-		
-		Item B and C are tests designed to show functionality for loading and saving data
-		the DataToString function is designed to save content as a line in a text file
-		and the alternate constructor within the class is then meant to load all fields from that line (as a string)
-		
-		I have set the fields to be Final so they cannot be changed after the object is created. This may need to change however
-		*/
-		
-		CatalogItem Item_A = new CatalogItem(50, 200.0, "TI 84 Calculator", "device", new String[]{ "calculator", "mathematics", "calculus", "algrebra", "Texas Instruments"});
-		CatalogItem Item_B = new CatalogItem("50,200.0,TI 84 Calculator,device,calculator-mathematics-calculus-algrebra-Texas Instruments-");
-		CatalogItem Item_C = new CatalogItem(Item_B.DataToString());
-		
-		System.out.println("\nITEM A - DATA TO FIELD CONSTRUCTOR");
-		Item_A.printFields();
-		
-		System.out.println("\nITEM B - STRING TO FIELD CONSTRUCTOR");
-		Item_B.printFields();
-		
-		System.out.println("\nITEM C - EXPORT ITEM DATA AND LOAD INTO NEW OBJECT");
-		Item_C.printFields();
-		
-		//ALL ITEMS LIST
-		List<CatalogItem> ItemLibrary = new ArrayList<CatalogItem>(); 
-		
-		if (LoadFile("backend\\src\\data\\items.csv") != null)
-		{
-			//Create Temporary Array-List to hold loaded data
-			ArrayList<String> LoadItems = LoadFile("backend\\src\\data\\items.csv");
-			System.out.println("\nFILE LOAD SUCCESSFUL");
-			
-			for (int i = 1; i < (LoadItems.size()); i++)
-			{
-				//Create a catalog item from each line and add it to the item library
-				CatalogItem temp_item = new CatalogItem(LoadItems.get(i));
-				ItemLibrary.add(temp_item);	
-			}
-			
-			System.out.println("\nPRINTING FULL LIBRARY WITH LOADED DATA");
-			for (int i = 0; i < (ItemLibrary.size()); i++)
-			{
-				ItemLibrary.get(i).printFields();
-			}
-			
-			
-		}
-	}
 
+	// -------- NEW: build a List<CatalogItem> from CSV --------
+    public static List<CatalogItem> LoadLibrary(String file) {
+        List<CatalogItem> library = new ArrayList<>();
+        ArrayList<String> lines = LoadFile(file);
+        if (lines == null) return library;
 
+        for (int i = 1; i < lines.size(); i++) {   // skip header row
+            String line = lines.get(i).trim();
+            if (!line.isEmpty()) {
+                library.add(new CatalogItem(line));
+            }
+        }
+        return library;
+    }
 
+    // -------- NEW: convert one CatalogItem to a JSON object string --------
+    private static String itemToJson(CatalogItem item) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"id\":").append(item.ID).append(",");
+        sb.append("\"price\":").append(item.Price).append(",");
+        sb.append("\"description\":\"").append(escapeJson(item.Description)).append("\",");
+        sb.append("\"category\":\"").append(item.getCategory()).append("\",");
+
+        // tags array
+        sb.append("\"tags\":[");
+        for (int i = 0; i < item.ItemTags.size(); i++) {
+            sb.append("\"").append(escapeJson(item.ItemTags.get(i))).append("\"");
+            if (i < item.ItemTags.size() - 1) sb.append(",");
+        }
+        sb.append("]");
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    // -------- NEW: escape quotes/backslashes so JSON stays valid --------
+    private static String escapeJson(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    // -------- NEW: build a JSON array string from the whole library --------
+    private static String libraryToJson(List<CatalogItem> library) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < library.size(); i++) {
+            sb.append(itemToJson(library.get(i)));
+            if (i < library.size() - 1) sb.append(",");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    // -------- MAIN: start server --------
+    public static void main(String[] args) throws IOException {
+        // 1. Load the CSV into memory
+        List<CatalogItem> itemLibrary = LoadLibrary("backend\\src\\data\\items.csv");
+        System.out.println("Loaded " + itemLibrary.size() + " items from CSV.");
+
+        // 2. Start the HTTP server
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        System.out.println("Server running at http://localhost:8080");
+        System.out.println("Endpoint: http://localhost:8080/api/items");
+
+        // 3. Route /api/items
+        server.createContext("/api/items", new ItemsHandler(itemLibrary));
+
+        // 4. Start
+        server.setExecutor(null);
+        server.start();
+    }
+
+    // -------- HANDLER: serve the JSON --------
+    static class ItemsHandler implements HttpHandler {
+        private final List<CatalogItem> library;
+
+        public ItemsHandler(List<CatalogItem> library) {
+            this.library = library;
+        }
+
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            // CORS so frontend served from a different port can fetch
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS");
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
+
+            // Handle preflight (browser sends OPTIONS before cross-origin GET sometimes)
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+
+            String json = libraryToJson(library);
+
+            byte[] bytes = json.getBytes("UTF-8");
+            exchange.sendResponseHeaders(200, bytes.length);
+
+            OutputStream os = exchange.getResponseBody();
+            os.write(bytes);
+            os.close();
+        }
+    }
 }
