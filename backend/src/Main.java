@@ -65,7 +65,8 @@ public class Main {
 	}
 
 
-	// -------- NEW: build a List<CatalogItem> from CSV --------
+	//BUILD A List<CatalogItem> from CSV File
+    //Accepts String (File Location) returns List<CatalogItem>
     public static List<CatalogItem> LoadLibrary(String file) {
         List<CatalogItem> library = new ArrayList<>();
         ArrayList<String> lines = LoadFile(file);
@@ -80,6 +81,7 @@ public class Main {
         return library;
     }
 
+    //FRONTEND FUNCTIONS-METHODS
     // -------- NEW: convert one CatalogItem to a JSON object string --------
     private static String itemToJson(CatalogItem item) {
         StringBuilder sb = new StringBuilder();
