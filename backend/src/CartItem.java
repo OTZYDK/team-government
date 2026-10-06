@@ -148,7 +148,12 @@ public class CartItem{
 	
 	
 	//------------GETTERS
-	//Coming Soon!
+	public double getDiscountRate() {return discount_rate;}
+	public double getTaxRate() {return tax_rate;}
+	public int getUnitAmount() {return unit_amount;}
+	public boolean getTaxExempt() {return tax_exempt;}
+	public double getAdjustedPrice() {return adjusted_price;}
+	public double getTotalPrice() {return total_price;}
 	
 	//------------PRINTERS
 	public void printFields() {
