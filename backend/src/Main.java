@@ -1,83 +1,15 @@
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.io.OutputStream;       // for writing raw bytes to use the HTTP server
-import java.net.InetSocketAddress; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
-
-import com.sun.net.httpserver.HttpServer;   // The Http server
-import com.sun.net.httpserver.HttpHandler;  // the interface
-import com.sun.net.httpserver.HttpExchange; // Deals with the conversation of one browser request (one request + response)
-
-
-import java.io.File;                  // Import the File class
-import java.io.FileNotFoundException; // Import this class to handle errors
-import java.util.Scanner;             // Import the Scanner class to read text files
-/*
-ITEM CLASS REQUIREMENTS:
-ID -> Int
-Price -> Double
-Description -> String
-Category(Traits) -> Separate Class Object
-
-DATABASE REQUIREMENTS:
-Save as csv file
-holds all fields and items
-is hardcoded / prewritten
-*/
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;       // for writing raw bytes to use the HTTP server
+import java.io.IOException; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
+import java.io.OutputStream;   // The Http server
+import java.net.InetSocketAddress;  // the interface
+import java.util.List; // Deals with the conversation of one browser request (one request + response)
 
 
 public class Main {
-	
-	//LOAD FILE - RETURNS AN ARRAY-LIST WITH ALL DATA
-	public static ArrayList<String> LoadFile(String file)
-	{
-		//Create File Object from source file
-	    File sourceFile = new File(file);
-	    
-	    //Create Empty Array list to hold data
-	    ArrayList<String> returnData = new ArrayList<String>(); 
-	    
-	    //Try-Catch for Scanner
-	    //If Scanner is successful
-	    try (Scanner readFile = new Scanner(sourceFile)) 
-	    {
-	      while (readFile.hasNextLine())
-	      {
-	    	  String data = readFile.nextLine();
-	    	  //System.out.println(data);
-	    	  returnData.add(data);
-	      }
-	      readFile.close();
-	      return returnData;
-	      
-	    } catch (FileNotFoundException e) {
-	      System.out.println("An error occurred.");
-	      e.printStackTrace();
-	      return null;
-	    }
-	}
 
-
-	// -------- NEW: build a List<CatalogItem> from CSV --------
-    public static List<CatalogItem> LoadLibrary(String file) {
-        List<CatalogItem> library = new ArrayList<>();
-        ArrayList<String> lines = LoadFile(file);
-        if (lines == null) return library;
-
-        for (int i = 1; i < lines.size(); i++) {   // skip header row
-            String line = lines.get(i).trim();
-            if (!line.isEmpty()) {
-                library.add(new CatalogItem(line));
-            }
-        }
-        return library;
-    }
-
-    // -------- NEW: convert one CatalogItem to a JSON object string --------
+    // Convert one CatalogItem to a JSON object string --------
     private static String itemToJson(CatalogItem item) {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
@@ -86,7 +18,7 @@ public class Main {
         sb.append("\"description\":\"").append(escapeJson(item.Description)).append("\",");
         sb.append("\"category\":\"").append(item.getCategory()).append("\",");
 
-        // tags array
+        // Add tags array to JSON
         sb.append("\"tags\":[");
         for (int i = 0; i < item.ItemTags.size(); i++) {
             sb.append("\"").append(escapeJson(item.ItemTags.get(i))).append("\"");
@@ -98,13 +30,13 @@ public class Main {
         return sb.toString();
     }
 
-    // -------- NEW: escape quotes/backslashes so JSON stays valid --------
+    // Escape quotes/backslashes so JSON stays valid
     private static String escapeJson(String s) {
         if (s == null) return "";
         return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
-    // -------- NEW: build a JSON array string from the whole library --------
+    // Build a JSON array string from the whole library
     private static String libraryToJson(List<CatalogItem> library) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -116,10 +48,10 @@ public class Main {
         return sb.toString();
     }
 
-    // -------- MAIN: start server --------
+    //MAIN: start server
     public static void main(String[] args) throws IOException {
         // 1. Load the CSV into memory
-        List<CatalogItem> itemLibrary = LoadLibrary("backend\\src\\data\\items.csv");
+        List<CatalogItem> itemLibrary = CsvHandler.LoadLibrary("backend\\src\\data\\items.csv");
         System.out.println("Loaded " + itemLibrary.size() + " items from CSV.");
 
         // 2. Start the HTTP server
@@ -161,9 +93,9 @@ public class Main {
             byte[] bytes = json.getBytes("UTF-8");
             exchange.sendResponseHeaders(200, bytes.length);
 
-            OutputStream os = exchange.getResponseBody();
-            os.write(bytes);
-            os.close();
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(bytes);
+            }
         }
     }
 }
