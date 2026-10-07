@@ -1,21 +1,14 @@
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.io.OutputStream;       // for writing raw bytes to use the HTTP server
-import java.net.InetSocketAddress; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
-
-import com.sun.net.httpserver.HttpServer;   // The Http server
-import com.sun.net.httpserver.HttpHandler;  // the interface
-import com.sun.net.httpserver.HttpExchange; // Deals with the conversation of one browser request (one request + response)
-
-
-import java.io.File;                  // Import the File class
-import java.io.FileNotFoundException; // Import this class to handle errors
-import java.util.Scanner;             // Import the Scanner class to read text files
+import java.io.OutputStream;
+import java.net.InetSocketAddress;       // for writing raw bytes to use the HTTP server
+import java.util.ArrayList; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
+import java.util.List;   // The Http server
+import java.util.Scanner;  // the interface
 /*
 ITEM CLASS REQUIREMENTS:
 ID -> Int
@@ -55,6 +48,7 @@ public class Main {
 	    	  returnData.add(data);
 	      }
 	      readFile.close();
+          System.out.println(file + "AHHHHHHH");
 	      return returnData;
 	      
 	    } catch (FileNotFoundException e) {
