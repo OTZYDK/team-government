@@ -1,13 +1,22 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;       // for writing raw bytes to use the HTTP server
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
+import java.util.HashMap;
 import java.util.List;   // The Http server
+import java.util.Map;
 import java.util.Scanner;  // the interface
 /*
 ITEM CLASS REQUIREMENTS:
@@ -135,34 +144,149 @@ public class Main {
     }
 
     // -------- HANDLER: serve the JSON --------
-    static class ItemsHandler implements HttpHandler {
-        private final List<CatalogItem> library;
+static class ItemsHandler implements HttpHandler {
+    private final List<CatalogItem> library;
 
-        public ItemsHandler(List<CatalogItem> library) {
-            this.library = library;
+    public ItemsHandler(List<CatalogItem> library) {
+        this.library = library;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        // ---- Common headers ----
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
+
+        // ---- Handle preflight ----
+        if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+            exchange.sendResponseHeaders(204, -1);
+            return;
         }
 
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            // CORS so frontend served from a different port can fetch
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS");
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
+        String method = exchange.getRequestMethod();
 
-            // Handle preflight (browser sends OPTIONS before cross-origin GET sometimes)
-            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
-                exchange.sendResponseHeaders(204, -1);
-                return;
-            }
-
-            String json = libraryToJson(library);
-
-            byte[] bytes = json.getBytes("UTF-8");
-            exchange.sendResponseHeaders(200, bytes.length);
-
-            OutputStream os = exchange.getResponseBody();
-            os.write(bytes);
-            os.close();
+        if ("POST".equalsIgnoreCase(method)) {
+            handlePost(exchange);
+        } else {
+            handleGet(exchange);
         }
     }
+
+    // ---- GET: return the whole library as JSON ----
+    private void handleGet(HttpExchange exchange) throws IOException {
+        String json = libraryToJson(library);
+        byte[] bytes = json.getBytes("UTF-8");
+        exchange.sendResponseHeaders(200, bytes.length);
+        OutputStream os = exchange.getResponseBody();
+        os.write(bytes);
+        os.close();
+    }
+
+    // ---- POST: parse form body, add item, save to CSV ----
+private void handlePost(HttpExchange exchange) throws IOException {
+    // 1. Read the raw body
+    InputStream input = exchange.getRequestBody();
+    String body = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+    System.out.println("POST body: " + body);
+
+    // 2. Parse into key-value pairs
+    Map<String, String> fields = parseFormBody(body);
+
+    // 3. Extract expected fields
+    String idStr       = fields.getOrDefault("id", "").trim();
+    String description = fields.getOrDefault("description", "").trim();
+    String category    = fields.getOrDefault("category", "ERROR").trim();
+    String tagsRaw     = fields.getOrDefault("tags", "").trim();
+    String priceStr    = fields.getOrDefault("price", "0").trim();
+
+
+    // 4. Validate required fields
+    if (idStr.isEmpty() || description.isEmpty() || priceStr.isEmpty()) {
+        sendJson(exchange, 400, "{\"error\":\"Missing required fields\"}");
+        return;
+    }
+
+    // 5. Parse numeric fields
+    int id;
+    double price;
+    try {
+        id = Integer.parseInt(idStr);
+        price = Double.parseDouble(priceStr);
+    } catch (NumberFormatException e) {
+        sendJson(exchange, 400, "{\"error\":\"Invalid id or price\"}");
+        return;
+    }
+
+    // About to check duplicates for id
+
+    // 6. Check for duplicate ID
+    for (CatalogItem item : library) {
+        if (item.ID == id) {
+            sendJson(exchange, 409, "{\"error\":\"An item with that ID already exists\"}");
+            return;
+        }
+    }
+
+    // About to write to CSV
+
+    // 7. Build the new CatalogItem
+    String[] tags = tagsRaw.isEmpty() ? new String[0] : tagsRaw.split("-");
+    CatalogItem newItem = new CatalogItem(id, price, description, category, tags);
+
+    // 8. Add to in-memory library
+    library.add(newItem);
+
+    // 9. Append to CSV file
+    try (FileWriter fw = new FileWriter("backend\\src\\data\\items.csv", true);
+         BufferedWriter bw = new BufferedWriter(fw);
+         PrintWriter out = new PrintWriter(bw)) {
+        out.println(newItem.DataToString());
+        System.out.println("WROTE: " + newItem.DataToString());  //test
+    } catch (IOException e) {
+        System.out.println("WRITE FAILED: " + e.getMessage()); //test
+        e.printStackTrace();
+        sendJson(exchange, 500, "{\"error\":\"Could not write to CSV\"}");
+        return;
+    }
+
+    
+
+    // 10. Success response
+    sendJson(exchange, 201, "{\"status\":\"created\",\"id\":" + id + "}");
+}
+
+    // ---- Parse "key1=value1&key2=value2" into a map ----
+    private Map<String, String> parseFormBody(String body) {
+        Map<String, String> map = new HashMap<>();
+        if (body == null || body.isEmpty()) return map;
+
+        for (String pair : body.split("&")) {
+            int eq = pair.indexOf('=');
+            if (eq < 0) continue;
+            String key = pair.substring(0, eq);
+            String value = pair.substring(eq + 1);
+            try {
+                // URL-decode handles "+" → space and "%20" → space
+                key = URLDecoder.decode(key, "UTF-8");
+                value = URLDecoder.decode(value, "UTF-8");
+            } catch (Exception ignored) {}
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    // ---- Helper: send a JSON response with a status code ----
+    private void sendJson(HttpExchange exchange, int status, String json) throws IOException {
+        byte[] bytes = json.getBytes("UTF-8");
+        exchange.sendResponseHeaders(status, bytes.length);
+        OutputStream os = exchange.getResponseBody();
+        os.write(bytes);
+        os.close();
+    }
+}
+
+
+
 }
