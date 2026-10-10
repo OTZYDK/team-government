@@ -1,101 +1,542 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;       // for writing raw bytes to use the HTTP server
-import java.io.IOException; // to use the HTTP server: represents an IP address + port number pair — a specific listening point on the machine
-import java.io.OutputStream;   // The Http server
-import java.net.InetSocketAddress;  // the interface
-import java.util.List; // Deals with the conversation of one browser request (one request + response)
+import com.sun.net.httpserver.HttpServer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
-    // Convert one CatalogItem to a JSON object string --------
-    private static String itemToJson(CatalogItem item) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"id\":").append(item.ID).append(",");
-        sb.append("\"price\":").append(item.Price).append(",");
-        sb.append("\"description\":\"").append(escapeJson(item.Description)).append("\",");
-        sb.append("\"category\":\"").append(item.getCategory()).append("\",");
+    private static final String CSV_FILE = "backend/src/data/items.csv";
+    private static final List<CatalogItem> library =
+            new ArrayList<>();
 
-        // Add tags array to JSON
-        sb.append("\"tags\":[");
-        for (int i = 0; i < item.ItemTags.size(); i++) {
-            sb.append("\"").append(escapeJson(item.ItemTags.get(i))).append("\"");
-            if (i < item.ItemTags.size() - 1) sb.append(",");
-        }
-        sb.append("]");
+    public static void main(String[] args) throws Exception {
 
-        sb.append("}");
-        return sb.toString();
-    }
+        library.addAll(CsvHandler.LoadLibrary(CSV_FILE));
 
-    // Escape quotes/backslashes so JSON stays valid
-    private static String escapeJson(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
+        System.out.println(
+                "Loaded " + library.size() + " items from CSV."
+        );
 
-    // Build a JSON array string from the whole library
-    private static String libraryToJson(List<CatalogItem> library) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < library.size(); i++) {
-            sb.append(itemToJson(library.get(i)));
-            if (i < library.size() - 1) sb.append(",");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
+        HttpServer server =
+                HttpServer.create(
+                        new InetSocketAddress(8080),
+                        0
+                );
 
-    //MAIN: start server
-    public static void main(String[] args) throws IOException {
-        // 1. Load the CSV into memory
-        List<CatalogItem> itemLibrary = CsvHandler.LoadLibrary("backend\\src\\data\\items.csv");
-        System.out.println("Loaded " + itemLibrary.size() + " items from CSV.");
+        server.createContext(
+                "/api/items",
+                new ItemsHandler()
+        );
 
-        // 2. Start the HTTP server
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        System.out.println("Server running at http://localhost:8080");
-        System.out.println("Endpoint: http://localhost:8080/api/items");
-
-        // 3. Route /api/items
-        server.createContext("/api/items", new ItemsHandler(itemLibrary));
-
-        // 4. Start
         server.setExecutor(null);
         server.start();
+
+        System.out.println(
+                "Server running at http://localhost:8080"
+        );
+
+        System.out.println(
+                "Endpoint: http://localhost:8080/api/items"
+        );
     }
 
-    // -------- HANDLER: serve the JSON --------
     static class ItemsHandler implements HttpHandler {
-        private final List<CatalogItem> library;
-
-        public ItemsHandler(List<CatalogItem> library) {
-            this.library = library;
-        }
 
         @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            // CORS so frontend served from a different port can fetch
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS");
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
+        public void handle(HttpExchange exchange)
+                throws IOException {
 
-            // Handle preflight (browser sends OPTIONS before cross-origin GET sometimes)
-            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+            exchange.getResponseHeaders().set(
+                    "Access-Control-Allow-Origin",
+                    "*"
+            );
+
+            exchange.getResponseHeaders().set(
+                    "Access-Control-Allow-Methods",
+                    "GET, POST, PUT, DELETE, OPTIONS"
+            );
+
+            exchange.getResponseHeaders().set(
+                    "Access-Control-Allow-Headers",
+                    "Content-Type"
+            );
+
+            if ("OPTIONS".equalsIgnoreCase(
+                    exchange.getRequestMethod())) {
+
                 exchange.sendResponseHeaders(204, -1);
                 return;
             }
 
-            String json = libraryToJson(library);
+            String method =
+                    exchange.getRequestMethod();
 
-            byte[] bytes = json.getBytes("UTF-8");
-            exchange.sendResponseHeaders(200, bytes.length);
+            String path =
+                    exchange.getRequestURI().getPath();
 
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(bytes);
+            try {
+
+                // GET /api/items
+                if (method.equals("GET")
+                        && path.equals("/api/items")) {
+
+                    sendResponse(
+                            exchange,
+                            200,
+                            libraryToJson(library)
+                    );
+
+                    return;
+                }
+
+                // POST /api/items
+                if (method.equals("POST")
+                        && path.equals("/api/items")) {
+
+                    String body =
+                            readRequestBody(exchange);
+
+                    CatalogItem newItem =
+                            createItemFromJson(body);
+
+                    if (newItem == null) {
+
+                        sendResponse(
+                                exchange,
+                                400,
+                                "{\"error\":\"Invalid item data\"}"
+                        );
+
+                        return;
+                    }
+
+                    for (CatalogItem item : library) {
+
+                        if (item.ID == newItem.ID) {
+
+                            sendResponse(
+                                    exchange,
+                                    409,
+                                    "{\"error\":\"Item ID already exists\"}"
+                            );
+
+                            return;
+                        }
+                    }
+
+                    library.add(newItem);
+
+                    CsvHandler.SaveLibrary(
+                            CSV_FILE,
+                            library
+                    );
+
+                    sendResponse(
+                            exchange,
+                            201,
+                            itemToJson(newItem)
+                    );
+
+                    return;
+                }
+
+                // PUT /api/items/{id}
+                if (method.equals("PUT")
+                        && path.startsWith("/api/items/")) {
+
+                    String idText =
+                            path.substring(
+                                    "/api/items/".length()
+                            );
+
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(idText);
+                    } catch (NumberFormatException e) {
+
+                        sendResponse(
+                                exchange,
+                                400,
+                                "{\"error\":\"Invalid item ID\"}"
+                        );
+
+                        return;
+                    }
+
+                    String body =
+                            readRequestBody(exchange);
+
+                    CatalogItem updatedItem =
+                            createItemFromJson(body);
+
+                    if (updatedItem == null) {
+
+                        sendResponse(
+                                exchange,
+                                400,
+                                "{\"error\":\"Invalid item data\"}"
+                        );
+
+                        return;
+                    }
+
+                    for (int i = 0;
+                         i < library.size();
+                         i++) {
+
+                        if (library.get(i).ID == id) {
+
+                            library.set(i, updatedItem);
+
+                            CsvHandler.SaveLibrary(
+                                    CSV_FILE,
+                                    library
+                            );
+
+                            sendResponse(
+                                    exchange,
+                                    200,
+                                    itemToJson(updatedItem)
+                            );
+
+                            return;
+                        }
+                    }
+
+                    sendResponse(
+                            exchange,
+                            404,
+                            "{\"error\":\"Item not found\"}"
+                    );
+
+                    return;
+                }
+
+                // DELETE /api/items/{id}
+                if (method.equals("DELETE")
+                        && path.startsWith("/api/items/")) {
+
+                    String idText =
+                            path.substring(
+                                    "/api/items/".length()
+                            );
+
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(idText);
+                    } catch (NumberFormatException e) {
+
+                        sendResponse(
+                                exchange,
+                                400,
+                                "{\"error\":\"Invalid item ID\"}"
+                        );
+
+                        return;
+                    }
+
+                    for (int i = 0;
+                         i < library.size();
+                         i++) {
+
+                        if (library.get(i).ID == id) {
+
+                            CatalogItem removed =
+                                    library.remove(i);
+
+                            CsvHandler.SaveLibrary(
+                                    CSV_FILE,
+                                    library
+                            );
+
+                            sendResponse(
+                                    exchange,
+                                    200,
+                                    itemToJson(removed)
+                            );
+
+                            return;
+                        }
+                    }
+
+                    sendResponse(
+                            exchange,
+                            404,
+                            "{\"error\":\"Item not found\"}"
+                    );
+
+                    return;
+                }
+
+                sendResponse(
+                        exchange,
+                        404,
+                        "{\"error\":\"Endpoint not found\"}"
+                );
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+                sendResponse(
+                        exchange,
+                        500,
+                        "{\"error\":\"Server error\"}"
+                );
             }
+        }
+    }
+
+    private static String readRequestBody(
+            HttpExchange exchange) throws IOException {
+
+        InputStream input =
+                exchange.getRequestBody();
+
+        return new String(
+                input.readAllBytes(),
+                StandardCharsets.UTF_8
+        );
+    }
+
+    private static CatalogItem createItemFromJson(
+            String json) {
+
+        try {
+
+            int id =
+                    (int) getJsonNumber(json, "id");
+
+            double price =
+                    getJsonNumber(json, "price");
+
+            String description =
+                    getJsonString(json, "description");
+
+            String category =
+                    getJsonString(json, "category");
+
+            String[] tags =
+                    getJsonTags(json);
+
+            return new CatalogItem(
+                    id,
+                    price,
+                    description,
+                    category,
+                    tags
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String getJsonString(
+            String json,
+            String key) {
+
+        String search =
+                "\"" + key + "\":";
+
+        int start =
+                json.indexOf(search);
+
+        if (start == -1) {
+            throw new IllegalArgumentException();
+        }
+
+        start += search.length();
+
+        while (start < json.length()
+                && Character.isWhitespace(
+                        json.charAt(start))) {
+
+            start++;
+        }
+
+        if (json.charAt(start) == '"') {
+            start++;
+        }
+
+        int end =
+                json.indexOf('"', start);
+
+        return json.substring(start, end);
+    }
+
+    private static double getJsonNumber(
+            String json,
+            String key) {
+
+        String search =
+                "\"" + key + "\":";
+
+        int start =
+                json.indexOf(search);
+
+        if (start == -1) {
+            throw new IllegalArgumentException();
+        }
+
+        start += search.length();
+
+        while (start < json.length()
+                && Character.isWhitespace(
+                        json.charAt(start))) {
+
+            start++;
+        }
+
+        int end = start;
+
+        while (end < json.length()
+                && "0123456789.-"
+                .indexOf(json.charAt(end)) >= 0) {
+
+            end++;
+        }
+
+        return Double.parseDouble(
+                json.substring(start, end)
+        );
+    }
+
+    private static String[] getJsonTags(
+            String json) {
+
+        String search = "\"tags\":[";
+
+        int start =
+                json.indexOf(search);
+
+        if (start == -1) {
+            return new String[0];
+        }
+
+        start += search.length();
+
+        int end =
+                json.indexOf("]", start);
+
+        String tagsText =
+                json.substring(start, end)
+                        .replace("\"", "");
+
+        if (tagsText.trim().isEmpty()) {
+            return new String[0];
+        }
+
+        String[] tags =
+                tagsText.split(",");
+
+        for (int i = 0;
+             i < tags.length;
+             i++) {
+
+            tags[i] = tags[i].trim();
+        }
+
+        return tags;
+    }
+
+    private static String itemToJson(
+            CatalogItem item) {
+
+        StringBuilder json =
+                new StringBuilder();
+
+        json.append("{");
+        json.append("\"id\":").append(item.ID).append(",");
+        json.append("\"price\":").append(item.Price).append(",");
+        json.append("\"description\":\"")
+                .append(item.Description)
+                .append("\",");
+        json.append("\"category\":\"")
+                .append(item.Category)
+                .append("\",");
+        json.append("\"tags\":[");
+
+        for (int i = 0;
+             i < item.ItemTags.size();
+             i++) {
+
+            if (i > 0) {
+                json.append(",");
+            }
+
+            json.append("\"")
+                    .append(item.ItemTags.get(i))
+                    .append("\"");
+        }
+
+        json.append("]}");
+
+        return json.toString();
+    }
+
+    private static String libraryToJson(
+            List<CatalogItem> items) {
+
+        StringBuilder json =
+                new StringBuilder();
+
+        json.append("[");
+
+        for (int i = 0;
+             i < items.size();
+             i++) {
+
+            if (i > 0) {
+                json.append(",");
+            }
+
+            json.append(
+                    itemToJson(items.get(i))
+            );
+        }
+
+        json.append("]");
+
+        return json.toString();
+    }
+
+    private static void sendResponse(
+            HttpExchange exchange,
+            int statusCode,
+            String response)
+            throws IOException {
+
+        byte[] bytes =
+                response.getBytes(
+                        StandardCharsets.UTF_8
+                );
+
+        exchange.getResponseHeaders().set(
+                "Content-Type",
+                "application/json"
+        );
+
+        exchange.sendResponseHeaders(
+                statusCode,
+                bytes.length
+        );
+
+        try (OutputStream output =
+                     exchange.getResponseBody()) {
+
+            output.write(bytes);
         }
     }
 }

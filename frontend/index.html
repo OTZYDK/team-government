@@ -94,7 +94,32 @@
         </section> 
 
  
+<!-- Manager Catalog -->
+<section id="manager" class="welcome">
+    <h2>Manager Catalog</h2>
+    <p>Add, edit, or remove bookstore items.</p>
 
+    <form id="item-form">
+        <input type="number" id="item-id" placeholder="Item ID" required>
+
+        <input type="number" id="item-price" placeholder="Price" step="0.01" required>
+
+        <input type="text" id="item-description" placeholder="Description" required>
+
+        <select id="item-category" required>
+            <option value="">Select Category</option>
+            <option value="BOOK">Book</option>
+            <option value="DEVICE">Device</option>
+            <option value="TOOL">Tool</option>
+        </select>
+
+        <input type="text" id="item-tags" placeholder="Tags separated by commas">
+
+        <button type="submit">Add Item</button>
+        <button type="button" id="update-item">Update Item</button>
+        <button type="button" id="delete-item">Delete Item</button>
+    </form>
+</section>
         <!-- Supplies --> 
 
         <section id="supplies" class="welcome"> 

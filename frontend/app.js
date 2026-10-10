@@ -1,65 +1,269 @@
-// Dallas College Bookstore Shopping Cart
+// Dallas College Bookstore App
 
-let cart = [];
+const API_URL = "http://localhost:8080/api/items";
 
-// Add a product to the cart
-function addToCart(productName, productPrice) {
+// Load catalog when the page opens
+document.addEventListener("DOMContentLoaded", () => {
+    fetchItems();
 
-    cart.push({
-        name: productName,
-        price: productPrice
-    });
+    document
+        .getElementById("item-form")
+        .addEventListener("submit", addItem);
 
-    alert(productName + " has been added to your cart!");
+    document
+        .getElementById("update-item")
+        .addEventListener("click", updateItem);
 
-    updateCart();
+    document
+        .getElementById("delete-item")
+        .addEventListener("click", deleteItem);
+});
+
+// Get all items from the Java backend
+function fetchItems() {
+    fetch(API_URL)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to load items.");
+            }
+
+            return response.json();
+        })
+        .then(items => {
+            displayItems(items);
+        })
+        .catch(error => {
+            console.error("Error fetching items:", error);
+
+            document.getElementById("store-container").innerHTML =
+                "<p>Unable to load bookstore items. Please try again.</p>";
+        });
 }
 
-// Update the shopping cart display
-function updateCart() {
+// Display catalog items
+function displayItems(items) {
+    const container =
+        document.getElementById("store-container");
 
-    const cartSection = document.getElementById("cart");
+    container.innerHTML = "";
 
-    let total = 0;
+    items.forEach(item => {
 
-    let cartHTML = `
-        <h2>Shopping Cart</h2>
-    `;
+        const tagsHtml = item.tags
+            .map(tag => `<span class="tag">${tag}</span>`)
+            .join(" ");
 
-    if (cart.length === 0) {
+        const card = `
+            <div class="item-card">
 
-        cartHTML += `
-            <p>Your cart is currently empty.</p>
+                <span class="item-category">
+                    ${item.category}
+                </span>
+
+                <h3>${item.description}</h3>
+
+                <p class="price">
+                    $${item.price.toFixed(2)}
+                </p>
+
+                <div class="tags">
+                    ${tagsHtml}
+                </div>
+
+                <p>Item ID: ${item.id}</p>
+
+            </div>
         `;
 
-    } else {
+        container.innerHTML += card;
+    });
+}
 
-        cartHTML += `<ul>`;
+// Read item information from the manager form
+function getFormItem() {
 
-        cart.forEach(function(item) {
+    const id =
+        Number(document.getElementById("item-id").value);
 
-            cartHTML += `
-                <li>${item.name} - $${item.price.toFixed(2)}</li>
-            `;
+    const price =
+        Number(document.getElementById("item-price").value);
 
-            total += item.price;
+    const description =
+        document.getElementById("item-description").value.trim();
+
+    const category =
+        document.getElementById("item-category").value;
+
+    const tags =
+        document
+            .getElementById("item-tags")
+            .value
+            .split(",")
+            .map(tag => tag.trim())
+            .filter(tag => tag !== "");
+
+    return {
+        id,
+        price,
+        description,
+        category,
+        tags
+    };
+}
+
+// Add a new item
+function addItem(event) {
+
+    event.preventDefault();
+
+    const item = getFormItem();
+
+    fetch(API_URL, {
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(item)
+    })
+        .then(response => {
+
+            if (!response.ok) {
+                return response.json().then(error => {
+                    throw new Error(error.error);
+                });
+            }
+
+            return response.json();
+        })
+        .then(newItem => {
+
+            alert(
+                "Item added successfully: " +
+                newItem.description
+            );
+
+            document
+                .getElementById("item-form")
+                .reset();
+
+            fetchItems();
+        })
+        .catch(error => {
+
+            console.error("Error adding item:", error);
+
+            alert(
+                "Unable to add item: " +
+                error.message
+            );
         });
+}
 
-        cartHTML += `</ul>`;
+// Update an existing item
+function updateItem() {
 
-        cartHTML += `
-            <p><strong>Total: $${total.toFixed(2)}</strong></p>
-            <button onclick="clearCart()">Clear Cart</button>
-        `;
+    const item = getFormItem();
+
+    fetch(`${API_URL}/${item.id}`, {
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(item)
+    })
+        .then(response => {
+
+            if (!response.ok) {
+                return response.json().then(error => {
+                    throw new Error(error.error);
+                });
+            }
+
+            return response.json();
+        })
+        .then(updatedItem => {
+
+            alert(
+                "Item updated successfully: " +
+                updatedItem.description
+            );
+
+            document
+                .getElementById("item-form")
+                .reset();
+
+            fetchItems();
+        })
+        .catch(error => {
+
+            console.error("Error updating item:", error);
+
+            alert(
+                "Unable to update item: " +
+                error.message
+            );
+        });
+}
+
+// Delete an existing item
+function deleteItem() {
+
+    const id =
+        Number(document.getElementById("item-id").value);
+
+    if (!id) {
+        alert("Please enter an Item ID.");
+        return;
     }
 
-    cartSection.innerHTML = cartHTML;
-}
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete item " +
+            id +
+            "?"
+        );
 
-// Clear the shopping cart
-function clearCart() {
+    if (!confirmed) {
+        return;
+    }
 
-    cart = [];
+    fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+    })
+        .then(response => {
 
-    updateCart();
+            if (!response.ok) {
+                return response.json().then(error => {
+                    throw new Error(error.error);
+                });
+            }
+
+            return response.json();
+        })
+        .then(deletedItem => {
+
+            alert(
+                "Item deleted successfully: " +
+                deletedItem.description
+            );
+
+            document
+                .getElementById("item-form")
+                .reset();
+
+            fetchItems();
+        })
+        .catch(error => {
+
+            console.error("Error deleting item:", error);
+
+            alert(
+                "Unable to delete item: " +
+                error.message
+            );
+        });
 }
