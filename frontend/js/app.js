@@ -34,6 +34,7 @@ function fetchItems() {
         })
         .catch(error => {
             console.error("Error fetching items:", error);
+<<<<<<< HEAD
 
             document.getElementById("store-container").innerHTML =
                 "<p>Unable to load bookstore items. Please try again.</p>";
@@ -75,10 +76,36 @@ function displayItems(items) {
             </div>
         `;
 
+=======
+            document.getElementById("store-container").innerHTML =
+                "<p>Could not load items. Is the Java server running?</p>";
+        });
+}
+
+// Turn the list of items into HTML cards inside #store-container
+function displayItems(items) {
+    const container = document.getElementById("store-container");
+    container.innerHTML = "";
+
+    items.forEach(item => {
+        const tagsHtml = item.tags
+            .map(tag => `<span class="tag">${tag}</span>`)
+            .join("");
+
+        const card = `
+            <div class="item-card">
+                <span class="item-category">${item.category}</span>
+                <h3>${item.description}</h3>
+                <p class="price">$${item.price.toFixed(2)}</p>
+                <div class="tags">${tagsHtml}</div>
+            </div>
+        `;
+>>>>>>> cbbd191fa0cb34f7133f7ac54cf4d6c49ef5c86b
         container.innerHTML += card;
     });
 }
 
+<<<<<<< HEAD
 // Read item information from the manager form
 function getFormItem() {
 
@@ -267,3 +294,45 @@ function deleteItem() {
             );
         });
 }
+=======
+// ---------- ADD ITEM FORM ----------
+
+// Attach a submit handler to the Manager Catalog form
+function attachFormListener() {
+    const form = document.getElementById("addItemForm");
+    if (!form) {
+        console.error("Form #addItemForm not found in the page");
+        return;
+    }
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();   // stop the browser from reloading the page
+
+        const formElement = event.target;
+        const formData = new FormData(formElement);
+        const params = new URLSearchParams(formData);
+
+        try {
+            const response = await fetch("http://localhost:8080/api/items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: params.toString()
+            });
+
+            if (!response.ok) throw new Error("Server responded with " + response.status);
+
+            document.getElementById("form-message").textContent = "Item added!";
+            formElement.reset();
+
+            // Refresh the product grid so the new item appears immediately
+            fetchItems();
+
+        } catch (error) {
+            console.error("Failed to add item:", error);
+            document.getElementById("form-message").textContent = "Failed to add item.";
+        }
+    });
+}
+>>>>>>> cbbd191fa0cb34f7133f7ac54cf4d6c49ef5c86b
