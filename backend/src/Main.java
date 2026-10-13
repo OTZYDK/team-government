@@ -121,17 +121,21 @@ public class Main {
         List<CatalogItem> itemLibrary = LoadLibrary("backend\\src\\data\\items.csv");
         System.out.println("Loaded " + itemLibrary.size() + " items from CSV.");
 
+        BackendTest run = new BackendTest();
+		run.current();
+
+
         // 2. Start the HTTP server
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        System.out.println("Server running at http://localhost:8080");
-        System.out.println("Endpoint: http://localhost:8080/api/items");
+        //HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        //System.out.println("Server running at http://localhost:8080");
+        //System.out.println("Endpoint: http://localhost:8080/api/items");
 
         // 3. Route /api/items
-        server.createContext("/api/items", new ItemsHandler(itemLibrary));
+        //server.createContext("/api/items", new ItemsHandler(itemLibrary));
 
         // 4. Start
-        server.setExecutor(null);
-        server.start();
+        //server.setExecutor(null);
+        //server.start();
     }
 
     // -------- HANDLER: serve the JSON --------
