@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Login | Dallas College Bookstore</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <h1>Dallas College Bookstore</h1>
+    <p>MANAGEMENT PORTAL</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+</nav>
+
+<main>
+    <section class="welcome login-card">
+        <h2>Manager Login</h2>
+        <p>Sign in to access the Inventory Dashboard.</p>
+
+        <form id="login-form">
+            <div class="form-field">
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <p id="login-error" role="alert"></p>
+
+            <button type="submit">Sign In</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Dallas College Bookstore</p>
+</footer>
+
+<script src="js/login.js"></script>
+
+</body>
+</html>
