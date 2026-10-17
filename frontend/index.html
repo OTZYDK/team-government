@@ -1,228 +1,132 @@
-<!DOCTYPE html> 
-
-<html lang="en"> 
-
-<head> 
-
-    <meta charset="UTF-8"> 
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-
- 
-
-    <title>Dallas College Bookstore</title> 
-
- 
-
-    <link rel="stylesheet" href="css/styles.css"> 
-
-</head> 
-
- 
-
-<body> 
-
- 
-
-    <!-- Header --> 
-
-    <header> 
-
-        <h1>Dallas College Bookstore</h1> 
-
-        <p>Your one-stop shop for books, supplies, and college merchandise.</p> 
-
-    </header> 
-
- 
-
-    <!-- Navigation --> 
-
-    <nav> 
-
-        <a href="index.html">Home</a> 
-
-        <a href="#books">Books</a> 
-
-        <a href="#supplies">Supplies</a> 
-
-        <a href="#cart">Cart</a> 
-
-    </nav> 
-
- 
-
-    <!-- Main Content --> 
-
-    <main> 
-
- 
-
-        <!-- Welcome Section --> 
-
-        <section class="welcome"> 
-
-            <h2>Welcome to the Dallas College Bookstore</h2> 
-
-            <p> 
-
-                Find the textbooks, school supplies, and college 
-
-                merchandise you need for your classes. 
-
-            </p> 
-
-        </section> 
-
- 
-
-        <!-- Products - now populated by JavaScript from the Java backend --> 
-
-        <section id="books"> 
-
-            <h2>Featured Products</h2> 
-
- 
-
-            <div id="store-container" class="products"> 
-
-                     <p>Loading items...</p>
-
-                </div> 
-
-
-        </section> 
-
- 
-<!-- Manager Catalog -->
-<section id="manager" class="welcome">
-    <h2>Manager Catalog</h2>
-    <p>Add, edit, or remove bookstore items.</p>
-
-    <form id="item-form">
-        <input type="number" id="item-id" placeholder="Item ID" required>
-
-        <input type="number" id="item-price" placeholder="Price" step="0.01" required>
-
-        <input type="text" id="item-description" placeholder="Description" required>
-
-        <select id="item-category" required>
-            <option value="">Select Category</option>
-            <option value="BOOK">Book</option>
-            <option value="DEVICE">Device</option>
-            <option value="TOOL">Tool</option>
-        </select>
-
-        <input type="text" id="item-tags" placeholder="Tags separated by commas">
-
-        <button type="submit">Add Item</button>
-        <button type="button" id="update-item">Update Item</button>
-        <button type="button" id="delete-item">Delete Item</button>
-    </form>
-</section>
-        <!-- Supplies --> 
-
-        <section id="supplies" class="welcome"> 
-
-            <h2>School Supplies</h2> 
-
-            <p> 
-
-                Shop notebooks, calculators, pens, backpacks, 
-
-                and other supplies for your classes. 
-
-            </p> 
-
-        </section> 
-
- 
-
-        <!-- Cart --> 
-
-        <section id="cart" class="welcome"> 
-
-            <h2>Shopping Cart</h2> 
-
-            <p>Your cart is currently empty.</p> 
-
-            <button>View Cart</button> 
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dallas College Bookstore</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Dallas College Bookstore</h1>
+        <p>Your one-stop shop for books, supplies, and college merchandise.</p>
+    </header>
+
+    <main>
+        <section id="login-section" class="welcome">
+            <h2>Bookstore Login</h2>
+            <p>Please log in to access the bookstore.</p>
+
+            <form id="login-form" method="post">
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button id="login-button" type="submit">Log In</button>
+                <p id="login-message" role="alert" aria-live="polite"></p>
+            </form>
         </section>
-        
-        <!-- Manager Catalog -->
-<section id="manager" class="welcome">
-    <h2>Manager Catalog</h2>
-    <p>Use this section to add a new bookstore product.</p>
 
-    <form id="addItemForm">
+        <div id="app-content" style="display: none;">
+            <nav>
+                <a href="#books">Books and Products</a>
+                <a href="#supplies">Supplies</a>
+                <a href="#cart">Cart</a>
+                <span id="user-info"></span>
+                <button id="logout-button" type="button">Log Out</button>
+            </nav>
 
-        <label for="product-id">ID:</label>
-        <input
-            type="number"
-            id="product-id"
-            name="id"
-            placeholder="Enter product ID"
-        >
+            <section class="welcome">
+                <h2>Welcome to the Dallas College Bookstore</h2>
+                <p>
+                    Find the textbooks, school supplies, and college
+                    merchandise you need for your classes.
+                </p>
+            </section>
 
-        <label for="product-price">Price:</label>
-        <input
-            type="number"
-            id="product-price"
-            name="price"
-            placeholder="Enter price"
-            step="0.01"
-        >
+            <section id="books">
+                <h2>Featured Products</h2>
+                <div id="store-container" class="products">
+                    <p>Log in to load the catalog.</p>
+                </div>
+            </section>
 
-        <label for="product-description">Description:</label>
-        <input
-            type="text"
-            id="product-description"
-            name="description"
-            placeholder="Enter product description"
-        >
+            <section id="manager" class="welcome" style="display: none;">
+                <h2>Manager Catalog</h2>
+                <p>Add, edit, or remove bookstore items.</p>
 
-        <label for="product-category">Category:</label>
-        <input
-            type="text"
-            id="product-category"
-            name="category"
-            placeholder="Example: BOOK or DEVICE"
-        >
+                <form id="item-form">
+                    <label for="item-id">Item ID (leave blank to add)</label>
+                    <input type="number" id="item-id" min="1">
 
-        <label for="product-tags">Tags:</label>
-        <input
-            type="text"
-            id="product-tags"
-            name="tags"
-            placeholder="Example: textbook-math"
-        >
+                    <label for="item-price">Price</label>
+                    <input
+                        type="number"
+                        id="item-price"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
 
-        <button type="submit">Add Product</button>
+                    <label for="item-description">Description</label>
+                    <input type="text" id="item-description" required>
 
-    </form>
-     <div id="form-message"></div>  <!-- message to confirm if new item is added -->
-</section>
+                    <label for="item-category">Category</label>
+                    <select id="item-category" required>
+                        <option value="">Select Category</option>
+                        <option value="BOOK">Book</option>
+                        <option value="DEVICE">Device</option>
+                        <option value="TOOL">Tool</option>
+                        <option value="SNACK">Snack</option>
+                        <option value="DRINK">Drink</option>
+                        <option value="STATIONERY">Stationery</option>
+                        <option value="APPAREL">Apparel</option>
+                    </select>
 
+                    <label for="item-tags">Tags (separated by commas)</label>
+                    <input type="text" id="item-tags">
 
- 
+                    <button type="submit">Add Item</button>
+                    <button type="button" id="update-item">Update Item</button>
+                    <button type="button" id="delete-item">Delete Item</button>
+                </form>
 
-    </main> 
+                <p id="manager-message" role="status" aria-live="polite"></p>
+            </section>
 
- 
+            <section id="supplies" class="welcome">
+                <h2>School Supplies</h2>
+                <p>
+                    Shop notebooks, calculators, pens, backpacks,
+                    and other supplies for your classes.
+                </p>
+            </section>
 
-    <!-- Footer --> 
+            <section id="cart" class="welcome">
+                <h2>Shopping Cart</h2>
+                <p>Your cart is currently empty.</p>
+                <button type="button">View Cart</button>
+            </section>
+        </div>
+    </main>
 
-    <footer> 
-
-        <p>&copy; 2026 Dallas College Bookstore</p> 
-
-    </footer> 
-
-    <!-- Load app.js LAST so #store-container already exists in the DOM.
-         If placed in <head>, getElementById would return null. -->
-    <script src="js/app.js"></script>
-
-</body> 
-
-</html> 
+    <footer>
+        <p>&copy; 2026 Dallas College Bookstore</p>
+    </footer>
+</body>
+</html>
