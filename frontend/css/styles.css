@@ -1,226 +1,56 @@
+
 /* Dallas College Bookstore - Main Styles */
+
+/* ---------- Global Styles ---------- */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
   color: #333;
 }
 
-/* Header */
+/* ---------- Header ---------- */
 header {
   background-color: #006633;
   color: white;
   padding: 20px;
   text-align: center;
 }
+
 header h1 {
-  margin-bottom: 10px
-}
-
-/* Navigation */
-nav {
-  background-color: #006747;
-  padding: 12px;
-  text-align: center;
-}
-nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: bold;
-}
-nav a:hover {
-  text-decoration: underline;
-}
-
-/* Main content */
-main {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
-}
-.welcome {
-  background-color: white;
-  padding: 30px;
-  text-align: center;
-  border-radius: 8px;
-  margin-bottom: 30px;
-}
-
-/* Dallas College Bookstore - Main Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-/* Header */
-header {
-  background-color: #006633;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-header h1 {
-  margin-bottom: 10px
-}
-
-/* Navigation */
-nav {
-  background-color: #006747;
-  padding: 12px;
-  text-align: center;
-}
-nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: bold;
-}
-nav a:hover {
-  text-decoration: underline;
-}
-
-/* Main content */
-main {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
-}
-.welcome {
-  background-color: white;
-  padding: 30px;
-  text-align: center;
-  border-radius: 8px;
-  margin-bottom: 30px;
-}
-
-/* Products — this class is applied to #store-container */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-.product,
-.item-card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0,0.1);
-}
-.product h3,
-.item-card h3 {
   margin-bottom: 10px;
 }
-.price {
-  font-weight: bold;
-  margin: 10px 0;
-}
 
-/* ----------  styles for JS-generated content ---------- */
-
-/* Small uppercase category badge, e.g. BOOK / DEVICE / TOOL */
-.item-category {
-  display: inline-block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-/* Wrapper for the tag pills under each price */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 10px;
-}
-
-/* A single tag pill/capsule-shaped label  */
-.tag {
-  font-size: 0.7rem;
-  background: #eee;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #444;
-}
-
-/* Buttons */
-button {
-  background-color: #006747;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button: hover {
-  background-color: #004d35;
-}
-
-/* Footer */
-footer {
-  background-color: #003b5c;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-} 
-/* Dallas College Bookstore - Main Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-/* Header */
-header {
-  background-color: #006633;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-header h1 {
-  margin-bottom: 10px
-}
-
-/* Navigation */
-nav {
+/* ---------- Main Navigation ---------- */
+body > nav {
   background-color: #006747;
   padding: 12px;
   text-align: center;
 }
-nav a {
+
+body > nav a {
   color: white;
   text-decoration: none;
   margin: 0 15px;
   font-weight: bold;
 }
-nav a:hover {
+
+body > nav a:hover {
   text-decoration: underline;
 }
 
-/* Main content */
+/* ---------- Main Content ---------- */
 main {
   max-width: 1200px;
   margin: 30px auto;
   padding: 20px;
 }
+
 .welcome {
   background-color: white;
   padding: 30px;
@@ -263,11 +93,11 @@ main {
   outline-offset: 2px;
 }
 
-.search-form button {
-  font-size: 16px;
+/* ---------- Category and Tag Links ---------- */
+.category-section {
+  margin-top: 20px;
 }
 
-/* ---------- Category Links ---------- */
 .category-section h3 {
   margin-bottom: 12px;
   color: #333;
@@ -277,14 +107,18 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  background-color: transparent;
+  padding: 0;
+  text-align: left;
 }
 
 .category-links a {
   display: inline-block;
+  margin: 0;
+  padding: 10px 14px;
   background-color: #006747;
   color: white;
   text-decoration: none;
-  padding: 10px 14px;
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
@@ -294,6 +128,41 @@ main {
 .category-links a:focus {
   background-color: #004d35;
   text-decoration: underline;
+}
+
+/* ---------- Products ---------- */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.product,
+.item-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product h3,
+.item-card h3 {
+  margin-bottom: 10px;
+}
+
+.price {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* ---------- Product Category Labels ---------- */
+.item-category {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin-bottom: 6px;
 }
 
 /* ---------- Product Tags ---------- */
@@ -313,8 +182,60 @@ main {
   border-radius: 4px;
 }
 
+/* ---------- Buttons ---------- */
+button {
+  background-color: #006747;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #004d35;
+}
+
+/* ---------- Manager Forms ---------- */
+#item-form,
+#addItemForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 20px auto 0;
+}
+
+#item-form input,
+#item-form select,
+#addItemForm input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+#addItemForm label {
+  text-align: left;
+  font-weight: bold;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  background-color: #003b5c;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+
 /* ---------- Mobile Layout ---------- */
 @media (max-width: 600px) {
+  main {
+    padding: 12px;
+  }
+
   .search-form {
     flex-direction: column;
   }
@@ -330,160 +251,18 @@ main {
   .category-links a {
     padding: 9px 10px;
   }
-}
 
+  body > nav a {
+    display: inline-block;
+    margin: 5px 8px;
+  }
 
-/* Products — this class is applied to #store-container */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-.product,
-.item-card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0,0.1);
-}
-.product h3,
-.item-card h3 {
-  margin-bottom: 10px;
-}
-.price {
-  font-weight: bold;
-  margin: 10px 0;
-}
+  .products {
+    grid-template-columns: 1fr;
+  }
 
-/* ----------  styles for JS-generated content ---------- */
-
-/* Small uppercase category badge, e.g. BOOK / DEVICE / TOOL */
-.item-category {
-  display: inline-block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #666;
-  margin-bottom: 6px;
+  .welcome,
+  .search-section {
+    padding: 20px;
+  }
 }
-
-/* Wrapper for the tag pills under each price */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 10px;
-}
-
-/* A single tag pill/capsule-shaped label  */
-.tag {
-  font-size: 0.7rem;
-  background: #eee;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #444;
-}
-
-/* Buttons */
-button {
-  background-color: #006747;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button: hover {
-  background-color: #004d35;
-}
-
-/* Footer */
-footer {
-  background-color: #003b5c;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-} 
-/* Products — this class is applied to #store-container */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-.product,
-.item-card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0,0.1);
-}
-.product h3,
-.item-card h3 {
-  margin-bottom: 10px;
-}
-.price {
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-/* ----------  styles for JS-generated content ---------- */
-
-/* Small uppercase category badge, e.g. BOOK / DEVICE / TOOL */
-.item-category {
-  display: inline-block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-/* Wrapper for the tag pills under each price */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 10px;
-}
-
-/* A single tag pill/capsule-shaped label  */
-.tag {
-  font-size: 0.7rem;
-  background: #eee;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #444;
-}
-
-/* Buttons */
-button {
-  background-color: #006747;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button:hover {
-  background-color: #004d35;
-}
-
-/* Footer */
-footer {
-  background-color: #003b5c;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-} 
-
-  
-  
-    
-  
-  
-
-
-  
-
