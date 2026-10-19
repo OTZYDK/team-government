@@ -19,23 +19,47 @@
 
     <!-- Main Navigation -->
     <nav aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="#books">Books</a>
-        <a href="#supplies">Supplies</a>
-        <a href="#cart">Cart</a>
-    </nav>
+        
+<section id="manager">
+    <h2>Manager Catalog</h2>
+    <p>Add, edit, or remove bookstore items.</p>
 
-    <!-- Main Content -->
-    <main>
+    <form id="item-form">
+        <label for="item-id">Item ID</label>
+        <input type="number" id="item-id" name="id">
 
-        <!-- Welcome Section -->
-        <section class="welcome">
-            <h2>Welcome to the Dallas College Bookstore</h2>
-            <p>
-                Find the textbooks, school supplies, and college
-                merchandise you need for your classes.
-            </p>
-        </section>
+        <label for="item-price">Price</label>
+        <input type="number" id="item-price" name="price"
+               min="0" step="0.01" required>
+
+        <label for="item-description">Description</label>
+        <textarea id="item-description"
+                  name="description" required></textarea>
+
+        <label for="item-category">Category</label>
+        <select id="item-category" name="category" required>
+            <option value="">Select Category</option>
+            <option value="BOOK">Book</option>
+            <option value="DEVICE">Device</option>
+            <option value="TOOL">Tool</option>
+            <option value="SNACK">Snack</option>
+            <option value="DRINK">Drink</option>
+            <option value="STATIONERY">Stationery</option>
+            <option value="APPAREL">Apparel</option>
+            <option value="ERROR">Error</option>
+        </select>
+
+        <label for="item-tags">Tags</label>
+        <input type="text" id="item-tags" name="tags">
+
+        <div class="manager-buttons">
+            <button type="submit">Add Item</button>
+            <button type="button" id="update-item">Update Item</button>
+            <button type="button" id="delete-item">Delete Item</button>
+        </div>
+    </form>
+</section>
+
 
         <!-- Search and Category Navigation -->
         <section class="search-section">
