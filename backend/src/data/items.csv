@@ -1,14 +1,26 @@
 ID,Price,Description,Category,Tags
-1,280.25,TI-84 Calculator,DEVICE,calculator-mathematics-calculus-algrebra-texas Instruments-learning materials-math
+1,280.25,TI-84 Calculator,DEVICE,calculator-mathematics-calculus-algrebra-texas Instruments-learning materials-math-TI-texas-instruments
 2,45.99,Beginners Guide to Integral Calculus,BOOK,textbook-calculus-class materials-integral calclus-calc-integral calc-learning material-math-stem
 3,45.99,Beginners Guide to AP Physics,BOOK,textbook-ap-physics-ap physics-class materials-learning material-science-math-stem
 4,63.75,The Classics of English Literature,BOOK,textbook-english-literature-ap-ap lit-ap literature-learning material-sociology-social studies-
 5,49.16,How to Crush your Exams,BOOK,self help-study guide-studying-learning-guide
 6,18.99,Introduction to Javascript,BOOK,textbook-coding-computer science-it-learning materials-self help-javascript-web-
 7,18.99,Introduction to Python,BOOK,textbook-coding-computer science-it-backend-learning materials-python-web-
-8,12.99,Bic 25 Pack of Mechanical Pencils,TOOL,pencil-writing-mechanical-mechanical pencil-learning materials-writing materials-
-9,6.99,White Eraser 4 Pack,TOOL,eraser-writing-learning materials-writing materials-
+8,12.99,Bic 25 Pack of Mechanical Pencils,STATIONERY,pencil-writing-mechanical-mechanical pencil-learning materials-writing materials-art supplies-art-supplies-exam supplies-exam-supplies-
+9,6.99,White Eraser 4 Pack,TOOL,eraser-writing-learning materials-writing materials-art supplies-art-supplies-exam supplies-exam-supplies-
 10,150.99,Casio FX 260 Calculator,DEVICE,calculator-mathematics-calculus-algrebra-learning materials-casio-solar calculator-solar-math
-11,80.99,Lenovo ThinkPad T14s,DEVICE,computer-rental-
-12,5.99,Three Ring Binder,TOOL,writing materials-notebook-paper-class materials-binder-storage-organization
-13,5.99,Composition Notebook,TOOL,writing materials-notebook-paper-class materials-composition notebook-composition-science-writing-note taking-notes-
+11,80.99,Lenovo ThinkPad T14s,DEVICE,computer-rental-course-supplies-course supplies-
+12,5.99,Three Ring Binder,STATIONERY,writing materials-notebook-paper-class materials-binder-storage-organization-course-supplies-course supplies-
+13,5.99,Composition Notebook,STATIONERY,writing materials-notebook-paper-class materials-composition notebook-composition-science-writing-note taking-notes-course-supplies-course supplies-
+14,3.99,Yard Stick,TOOL,Measuring-class-science-math-meter-ruler-foot-inches-measuring
+15,4.59,Monster JUICE Pipeline Punch,DRINK,Caffeine-focus-energy-drink-energy drink-monste-taurine-
+16,4.99,Red Bull,DRINK,Caffeine-focus-energy-drink-energy drink-red bull-taurine-
+17,3.99,Coca Cola,DRINK,Caffeine-soda-drink-Coke-coca-cola-
+18,5.99,Chesters Hot Fries,SNACK,Spicy-chips-flamin hot-flamin-hot-food-
+19,0.99,Arizona Green Tea,DRINK,Tea-sweet-non carbonated-non-carbonated-
+20,3.75,Snickers Bar,SNACK,Candy-sweet-peanut-nougat-peanut allergy-allergy-chocolate-caramel-confection-
+21,4.99,Cheez Its,SNACK,Snack-cheese-salty-savory-chips-crackers-milk allergy-milk-allergy
+22,35.95,Thunderducks Hoodie,APPAREL,Clothing-clothes-sweater-hoodie-hood-long sleeve-sleeves-dallas college-pride-dallas college pride-school merchandise-merchandise-thunderducks-
+23,25.99,Thunderducks T-Shirt,APPAREL,Clothing-clothes-shirt-dallas college-pride-tshirt-t shirt-school merchandise-merchandise-thunderducks-
+24,49.99,Dallas College Jersey,APPAREL,Clothing-clothes-uniform-sweater-jersey-sports-team-dallas college-dallas college pride-pride-college-school merchandise-merchandise-
+25,18.99,Thunderducks Snapback,APPAREL,accessory-clothing-top-hat-snapback-school merchandise-merchandise-dallas college-thunderducks-school pride-dallas college pride-pride-
