@@ -12,7 +12,10 @@ Pass the results of these directly into ItemCatalog.EnterQuery() to get results
 
 
 public final class Search {
-	
+	public static String getAll(){
+		String result = "SELECT * FROM Items;";
+		return result;
+	}
 	
 	//----------SEARCH BY CATEGORY
 	//Returns Records with matching Category

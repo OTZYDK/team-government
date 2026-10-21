@@ -17,6 +17,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        //ItemCatalog.init();
+
+        //library.addAll(ItemCatalog.EnterQuery(Search.getAll()));
         library.addAll(CsvHandler.LoadLibrary(CSV_FILE));
 
         System.out.println(
