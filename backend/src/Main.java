@@ -75,7 +75,6 @@ public class Main {
         // 4. Start
         //server.setExecutor(null);
         //server.start();
-=======
         server.setExecutor(null);
         server.start();
 
@@ -86,7 +85,6 @@ public class Main {
         System.out.println(
                 "Endpoint: http://localhost:8080/api/items"
         );
->>>>>>> origin/main
     }
 
     static class ItemsHandler implements HttpHandler {
