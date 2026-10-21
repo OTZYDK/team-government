@@ -1,7 +1,6 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,46 +34,6 @@ public class Main {
                 new ItemsHandler()
         );
 
-<<<<<<< HEAD
-    // -------- NEW: escape quotes/backslashes so JSON stays valid --------
-    private static String escapeJson(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
-
-    // -------- NEW: build a JSON array string from the whole library --------
-    private static String libraryToJson(List<CatalogItem> library) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < library.size(); i++) {
-            sb.append(itemToJson(library.get(i)));
-            if (i < library.size() - 1) sb.append(",");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
-    // -------- MAIN: start server --------
-    public static void main(String[] args) throws IOException {
-        // 1. Load the CSV into memory
-        List<CatalogItem> itemLibrary = LoadLibrary("backend\\src\\data\\items.csv");
-        System.out.println("Loaded " + itemLibrary.size() + " items from CSV.");
-
-        BackendTest run = new BackendTest();
-		run.current();
-
-
-        // 2. Start the HTTP server
-        //HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        //System.out.println("Server running at http://localhost:8080");
-        //System.out.println("Endpoint: http://localhost:8080/api/items");
-
-        // 3. Route /api/items
-        //server.createContext("/api/items", new ItemsHandler(itemLibrary));
-
-        // 4. Start
-        //server.setExecutor(null);
-        //server.start();
         server.setExecutor(null);
         server.start();
 
