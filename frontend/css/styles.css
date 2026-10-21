@@ -1,48 +1,56 @@
+
 /* Dallas College Bookstore - Main Styles */
+
+/* ---------- Global Styles ---------- */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
   color: #333;
 }
 
-/* Header */
+/* ---------- Header ---------- */
 header {
   background-color: #006633;
   color: white;
   padding: 20px;
   text-align: center;
 }
+
 header h1 {
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 
-/* Navigation */
-nav {
+/* ---------- Main Navigation ---------- */
+body > nav {
   background-color: #006747;
   padding: 12px;
   text-align: center;
 }
-nav a {
+
+body > nav a {
   color: white;
   text-decoration: none;
   margin: 0 15px;
   font-weight: bold;
 }
-nav a:hover {
+
+body > nav a:hover {
   text-decoration: underline;
 }
 
-/* Main content */
+/* ---------- Main Content ---------- */
 main {
   max-width: 1200px;
   margin: 30px auto;
   padding: 20px;
 }
+
 .welcome {
   background-color: white;
   padding: 30px;
@@ -51,31 +59,103 @@ main {
   margin-bottom: 30px;
 }
 
-/* Products — this class is applied to #store-container */
+/* ---------- Search Bar ---------- */
+.search-section {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-section h2 {
+  color: #006633;
+  margin-bottom: 15px;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.search-form input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.search-form input[type="search"]:focus {
+  outline: 2px solid #006747;
+  outline-offset: 2px;
+}
+
+/* ---------- Category and Tag Links ---------- */
+.category-section {
+  margin-top: 20px;
+}
+
+.category-section h3 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.category-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: transparent;
+  padding: 0;
+  text-align: left;
+}
+
+.category-links a {
+  display: inline-block;
+  margin: 0;
+  padding: 10px 14px;
+  background-color: #006747;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.category-links a:hover,
+.category-links a:focus {
+  background-color: #004d35;
+  text-decoration: underline;
+}
+
+/* ---------- Products ---------- */
 .products {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
 }
+
 .product,
 .item-card {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+
 .product h3,
 .item-card h3 {
   margin-bottom: 10px;
 }
+
 .price {
   font-weight: bold;
   margin: 10px 0;
 }
 
-/* ----------  styles for JS-generated content ---------- */
-
-/* Small uppercase category badge, e.g. BOOK / DEVICE / TOOL */
+/* ---------- Product Category Labels ---------- */
 .item-category {
   display: inline-block;
   font-size: 0.75rem;
@@ -85,24 +165,24 @@ main {
   margin-bottom: 6px;
 }
 
-/* Wrapper for the tag pills under each price */
+/* ---------- Product Tags ---------- */
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
   margin-top: 10px;
 }
 
-/* A single tag pill/capsule-shaped label  */
 .tag {
-  font-size: 0.7rem;
-  background: #eee;
-  padding: 2px 6px;
+  display: inline-block;
+  font-size: 12px;
+  background-color: #e5f2e9;
+  color: #006633;
+  padding: 5px 8px;
   border-radius: 4px;
-  color: #444;
 }
 
-/* Buttons */
+/* ---------- Buttons ---------- */
 button {
   background-color: #006747;
   color: white;
@@ -111,25 +191,148 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #004d35;
 }
 
-/* Footer */
+/* ---------- Manager Forms ---------- */
+#item-form,
+#addItemForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 20px auto 0;
+}
+
+#item-form input,
+#item-form select,
+#addItemForm input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+#addItemForm label {
+  text-align: left;
+  font-weight: bold;
+}
+
+/* ---------- Footer ---------- */
 footer {
   background-color: #003b5c;
   color: white;
   text-align: center;
   padding: 20px;
   margin-top: 40px;
-} 
+}
 
-  
-  
-    
-  
-  
+/* ---------- Mobile Layout ---------- */
+@media (max-width: 600px) {
+  main {
+    padding: 12px;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-form button {
+    width: 100%;
+  }
+
+  .category-links {
+    gap: 8px;
+  }
+
+  .category-links a {
+    padding: 9px 10px;
+  }
+
+  body > nav a {
+    display: inline-block;
+    margin: 5px 8px;
+  }
+
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome,
+  .search-section {
+    padding: 20px;
+  }
+}
 
 
-  
+/* Manager Catalog form */
+#manager form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+#manager form label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+#manager form input,
+#manager form textarea,
+#manager form select {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font: inherit;
+}
+
+#manager form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.manager-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.manager-buttons button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: #006633;
+    color: white;
+    cursor: pointer;
+}
+
+.manager-buttons button: hover {
+    background-color: #004d26;
+}
+
+@media (max-width: 600px) {
+    #manager form {
+        padding: 14px;
+    }
+
+    .manager-buttons {
+        flex-direction: column;
+    }
+
+    .manager-buttons button {
+        width: 100%;
+    }
+}
 
