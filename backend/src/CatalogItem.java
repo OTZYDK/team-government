@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 
 /*
@@ -11,7 +12,9 @@ ItemTags -> String List of "Tags" or descriptors
 
 public class CatalogItem {
 	enum CategoryTag 
-	{BOOK,DEVICE,TOOL,ERROR}
+	{BOOK,DEVICE,TOOL,SNACK,DRINK,STATIONERY,APPAREL,ERROR}
+	// EXAM SUPPLIES, ART SUPPLIES, COURSE SUPPLIES can be tags
+	//snacks, drinks, stationery, exam supplies, art supplies, apparel, course supplies, and BOOKS
 		
 	public final int ID; //FIELD 0
 	public final double Price; //FIELD 1
@@ -21,7 +24,7 @@ public class CatalogItem {
 	public final ArrayList<String> ItemTags = new ArrayList<String>(); //FIELD 4
 	
 	//CONVERT STRING INPUT TO CATEGORY ENUM
-	private CategoryTag StringToTag(String argInput) {
+	public CategoryTag StringToTag(String argInput) {
 		String searchStr = argInput.trim().toLowerCase();
 		
 		switch (searchStr) 
@@ -29,6 +32,10 @@ public class CatalogItem {
 			case "book": {return CategoryTag.BOOK;} 
 			case "device": {return CategoryTag.DEVICE;} 
 			case "tool": {return CategoryTag.TOOL;}
+			case "snack": {return CategoryTag.SNACK;}
+			case "drink": {return CategoryTag.DRINK;}
+			case "stationery": {return CategoryTag.STATIONERY;}
+			case "apparel": {return CategoryTag.APPAREL;}
 			default: {return CategoryTag.ERROR;}
 		}	
 	}
@@ -51,6 +58,19 @@ public class CatalogItem {
 		
 		Category = StringToTag(arg_Category);
 		fillTagList(arg_Tags);
+	}
+	
+	//TAGS AS ONE LINE
+	public CatalogItem(int arg_ID, double arg_Price, String arg_Description, String arg_Category, String arg_Tags) {
+
+		ID = arg_ID;
+		Price = arg_Price;
+		Description = arg_Description;
+		
+		Category = StringToTag(arg_Category);
+		
+		String[] loadTags = arg_Tags.split("-"); 
+		fillTagList(loadTags);
 	}
 	
 	//CLASS CONSTRUCTOR, LOADS FROM SAVE
@@ -115,7 +135,20 @@ public class CatalogItem {
 		{System.out.println(ItemTags.get(i));}
 	}
 	
+	
+	
 	public void printFields() {
+		System.out.printf(
+		        "%d | %.2f | %s | %s | %s%n",
+		        ID,
+		        Price,
+		        Description,
+		        Category.toString(),
+		        TagstoString()
+		    );
+	}
+	
+	public void printFields(String depreciated) {
 		System.out.println("\nALL DATA FIELDS\n");
 		System.out.println("ID: " + ID);
 		System.out.println("PRICE: " + Price);

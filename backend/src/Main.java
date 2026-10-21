@@ -1,7 +1,6 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +17,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        //ItemCatalog.init();
+
+        //library.addAll(ItemCatalog.EnterQuery(Search.getAll()));
         library.addAll(CsvHandler.LoadLibrary(CSV_FILE));
 
         System.out.println(
