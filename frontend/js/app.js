@@ -174,8 +174,28 @@ function displayItems(items) {
 
         const id = document.createElement("p");
         id.textContent = "Item ID: " + item.id;
-
         card.append(category, description, price, tagsContainer, id);
+
+        // The manager catalog is for editing; customer cards can be added to the cart.
+        if (!document.getElementById("item-form")) {
+            const addButton = document.createElement("button");
+            addButton.type = "button";
+            addButton.className = "add-to-cart-button";
+            addButton.textContent = "Add to Cart";
+            addButton.addEventListener("click", () => {
+                const added = window.BookstoreCart && window.BookstoreCart.addItem(item.id);
+                if (added) {
+                    addButton.textContent = "Added to Cart";
+                    addButton.disabled = true;
+                    window.setTimeout(() => {
+                        addButton.textContent = "Add to Cart";
+                        addButton.disabled = false;
+                    }, 900);
+                }
+            });
+            card.appendChild(addButton);
+        }
+
         container.appendChild(card);
     });
 }
@@ -294,4 +314,3 @@ async function deleteItem() {
         alert("Unable to delete item: " + error.message);
     }
 }
-
