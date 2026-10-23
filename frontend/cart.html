@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | Dallas College Bookstore</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dallas College Bookstore</h1>
+        <p>Your campus finds, all in one place.</p>
+    </header>
+
+    <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="index.html#books">Books</a>
+        <a href="cart.html" aria-current="page">Cart <span class="cart-count" data-cart-count>0</span></a>
+        <a href="login.html">Manager</a>
+    </nav>
+
+    <main>
+        <section class="cart-page-card">
+            <div class="cart-page-heading">
+                <h2>Your Cart</h2>
+                <p>Enter a catalog item code or add products from the catalog.</p>
+            </div>
+
+            <form id="cart-item-code-form" class="cart-code-form">
+                <label for="cart-item-code">Add by item code</label>
+                <div class="cart-code-controls">
+                    <input id="cart-item-code" name="itemCode" type="text" inputmode="numeric" autocomplete="off" placeholder="Example: 1" required>
+                    <button type="submit">Add Item</button>
+                </div>
+            </form>
+            <p id="cart-feedback" class="cart-feedback" role="status" aria-live="polite"></p>
+
+            <div id="cart-items" class="cart-items" aria-live="polite">
+                <p>Loading your cart...</p>
+            </div>
+
+            <section class="cart-summary" aria-label="Cart total">
+                <p><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></p>
+                <p class="cart-total-row"><span>Current total</span><strong id="cart-total">$0.00</strong></p>
+                <a class="continue-shopping" href="index.html#books">Continue shopping</a>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Dallas College Bookstore</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+</body>
+</html>
+

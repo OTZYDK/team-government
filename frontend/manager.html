@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manager Dashboard | Dallas College Bookstore</title>
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+
+<header>
+    <h1>Dallas College Bookstore</h1>
+    <p>MANAGEMENT PORTAL</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="cart.html">Cart <span class="cart-count" data-cart-count>0</span></a>
+    <a href="manager.html">Manager</a>
+</nav>
+
+<main>
+    <section id="manager" class="welcome">
+
+        <div class="manager-heading">
+            <h2>Inventory Dashboard</h2>
+            <p>Manage your bookstore products in one place.</p>
+        </div>
+
+        <div class="manager-form-card">
+
+            <div class="form-heading">
+    <h3>Product Details</h3>
+    <p>Enter product information to add, update, or delete an item.</p>
+</div>
+
+            <form id="item-form">
+
+                <div class="form-field">
+                    <label for="item-id">Item ID</label>
+                    <input
+                        type="number"
+                        id="item-id"
+                        placeholder="Enter item ID"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="item-price">Price ($)</label>
+                    <input
+                        type="number"
+                        id="item-price"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="item-description">Description</label>
+                    <input
+                        type="text"
+                        id="item-description"
+                        placeholder="Enter product name"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="item-category">Category</label>
+                    <select id="item-category" required>
+                        <option value="">Select category</option>
+                        <option value="BOOK">Book</option>
+                        <option value="DEVICE">Device</option>
+                        <option value="TOOL">Tool</option>
+                    </select>
+                </div>
+
+                <div class="form-field full-width">
+                    <label for="item-tags">Tags</label>
+                    <input
+                        type="text"
+                        id="item-tags"
+                        placeholder="Separate tags with commas"
+                    >
+                    <small>Example: textbook, science, supplies</small>
+                </div>
+
+                <div class="form-actions full-width">
+                    <button type="submit">+ Add Item</button>
+
+                    <button
+                        type="button"
+                        id="update-item"
+                        class="update-button"
+                    >
+                        Update Item
+                    </button>
+
+                    <button
+                        type="button"
+                        id="delete-item"
+                        class="delete-button"
+                    >
+                        Delete Item
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <section id="books" class="catalog-section">
+
+        <div class="catalog-heading">
+            <h2>Product Catalog</h2>
+            <p>Browse the items in your bookstore.</p>
+        </div>
+
+        <div id="store-container" class="products">
+            <p>Loading items...</p>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Dallas College Bookstore</p>
+</footer>
+
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
