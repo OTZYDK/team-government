@@ -1,6 +1,8 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,7 +13,8 @@ import java.util.List;
 
 public class Main {
 
-    private static final String CSV_FILE = "backend/src/data/items.csv";
+    
+    private static final String CSV_FILE = "app/items.csv";
     private static final List<CatalogItem> library =
             new ArrayList<>();
 
@@ -37,8 +40,84 @@ public class Main {
                 new ItemsHandler()
         );
 
+        // Serve the static frontend (HTML, CSS, JS, images) from app/frontend/.
+        // This lets the user open http://127.0.0.1:8080/ and see the storefront
+        // instead of raw JSON, and avoids CORS issues because everything is
+        // same-origin.
+        server.createContext("/", exchange -> {
+        String path = exchange.getRequestURI().getPath();
+
+        // Root URL should serve the homepage.
+        if (path.equals("/") || path.equals("/index.html")) {
+                path = "/index.html";
+        }
+
+        // Security: block "../" so a crafted URL can't escape app/frontend/
+        // and read arbitrary files (like the app's JAR).
+        if (path.contains("..")) {
+                exchange.sendResponseHeaders(400, -1);
+                return;
+        }
+
+        // Only serve file types the frontend needs. This blocks access to
+        // .jar, .db, .exe, and anything else not meant for the browser.
+        String lower = path.toLowerCase();
+        boolean allowed = lower.endsWith(".html") || lower.endsWith(".css")
+                        || lower.endsWith(".js")   || lower.endsWith(".png")
+                        || lower.endsWith(".jpg")  || lower.endsWith(".jpeg")
+                        || lower.endsWith(".gif")  || lower.endsWith(".svg")
+                        || lower.endsWith(".ico");
+        if (!allowed) {
+                exchange.sendResponseHeaders(403, -1);
+                return;
+        }
+
+        // Resolve the file from the installed app's frontend folder.
+        // jpackage copies --input contents into "app/", so frontend/ ends
+        // up at C:\Program Files\DallasCollegeBookstore\app\frontend\.
+        java.io.File file = new java.io.File("app/frontend" + path);
+        if (!file.exists() || !file.isFile()) {
+                exchange.sendResponseHeaders(404, -1);
+                return;
+        }
+
+        // Browsers need the correct Content-Type to render files properly.
+        // Without charset=UTF-8, non-ASCII characters can garble.
+        String contentType;
+        if (lower.endsWith(".html"))      contentType = "text/html; charset=UTF-8";
+        else if (lower.endsWith(".css"))  contentType = "text/css; charset=UTF-8";
+        else if (lower.endsWith(".js"))   contentType = "application/javascript; charset=UTF-8";
+        else if (lower.endsWith(".png"))  contentType = "image/png";
+        else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) contentType = "image/jpeg";
+        else if (lower.endsWith(".gif"))  contentType = "image/gif";
+        else if (lower.endsWith(".svg"))  contentType = "image/svg+xml";
+        else                               contentType = "image/x-icon";
+
+        byte[] content = java.nio.file.Files.readAllBytes(file.toPath());
+        exchange.getResponseHeaders().set("Content-Type", contentType);
+        exchange.sendResponseHeaders(200, content.length);
+        try (OutputStream os = exchange.getResponseBody()) {
+                os.write(content);
+        }
+        });
+
+
         server.setExecutor(null);
         server.start();
+        System.out.println();
+        System.out.println("========================================");
+        System.out.println("  Bookstore running at http://127.0.0.1:8080/");
+        System.out.println("  Do NOT close this window while using the app.");
+        System.out.println("========================================");
+        System.out.println();
+
+        Thread.sleep(500);
+
+        try {
+        java.awt.Desktop.getDesktop().browse(new java.net.URI("http://127.0.0.1:8080/"));
+        } catch (Exception e) {
+        System.out.println("Open http://127.0.0.1:8080/ in your browser.");
+        }
 
         System.out.println(
                 "Server running at http://localhost:8080"
@@ -48,6 +127,100 @@ public class Main {
                 "Endpoint: http://localhost:8080/api/items"
         );
     }
+
+
+    /**
+ * Serves the frontend files (HTML, CSS, JS, images) that are bundled
+ * with the installer.
+ *
+ * Why this exists:
+ *   Without this handler, the user would have to manually find and open
+ *   frontend/index.html in their browser, which triggers file:// CORS
+ *   issues and defeats the purpose of a "double-click to run" installer.
+ *
+ *   With this handler, everything is served from the same origin
+ *   (http://127.0.0.1:8080), so the browser sees the storefront at "/"
+ *   and the API at "/api/items" with no cross-origin restrictions.
+ *
+ * Where the files come from:
+ *   jpackage copies everything in --input into the install folder's
+ *   "app/" subdirectory. So frontend/index.html on disk becomes
+ *   "app/frontend/index.html" relative to the app's working directory.
+ */
+
+    static class StaticFileHandler implements HttpHandler {
+
+    // Allowed file extensions (blocks directory traversal and unwanted types)
+    private static final String[] ALLOWED_EXTENSIONS = {
+        ".html", ".css", ".js", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico"
+    };
+
+    @Override
+public void handle(HttpExchange exchange) throws IOException {
+    String path = exchange.getRequestURI().getPath();
+
+    // Root URL ("/") should serve the homepage, not 404.
+    if (path.equals("/") || path.equals("/index.html")) {
+        path = "/index.html";
+    }
+
+    // Security: block "../" so a crafted URL can't escape app/frontend/
+    // and read arbitrary files from the filesystem.
+    if (path.contains("..")) {
+        exchange.sendResponseHeaders(400, -1);
+        return;
+    }
+
+    // Only serve file types the frontend actually needs. Anything else
+    // (e.g. .jar, .db, .exe) is blocked so a curious user can't download
+    // the app's own binary files by guessing URLs.
+    boolean allowed = false;
+    for (String ext : ALLOWED_EXTENSIONS) {
+        if (path.toLowerCase().endsWith(ext)) {
+            allowed = true;
+            break;
+        }
+    }
+    if (!allowed) {
+        exchange.sendResponseHeaders(403, -1);
+        return;
+    }
+
+    // Resolve the file relative to the install folder's app/ directory.
+    // "user.dir" is where the .exe was launched from, which for a
+    // jpackage install is C:\Program Files\DallasCollegeBookstore\.
+    File file = new File("app/frontend" + path);
+    if (!file.exists() || !file.isFile()) {
+        exchange.sendResponseHeaders(404, -1);
+        return;
+    }
+
+    // Browsers need the correct Content-Type to render HTML/CSS/JS
+    // properly. If we send everything as text/plain, the page shows
+    // raw source code instead of rendering.
+    String contentType;
+    String lower = path.toLowerCase();
+    if (lower.endsWith(".html"))      contentType = "text/html; charset=UTF-8";
+    else if (lower.endsWith(".css"))  contentType = "text/css; charset=UTF-8";
+    else if (lower.endsWith(".js"))   contentType = "application/javascript; charset=UTF-8";
+    else if (lower.endsWith(".png"))  contentType = "image/png";
+    else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) contentType = "image/jpeg";
+    else if (lower.endsWith(".gif"))  contentType = "image/gif";
+    else if (lower.endsWith(".svg"))  contentType = "image/svg+xml";
+    else if (lower.endsWith(".ico"))  contentType = "image/x-icon";
+    else                               contentType = "application/octet-stream";
+
+    byte[] content = java.nio.file.Files.readAllBytes(file.toPath());
+
+    exchange.getResponseHeaders().set("Content-Type", contentType);
+    exchange.sendResponseHeaders(200, content.length);
+
+    try (OutputStream os = exchange.getResponseBody()) {
+        os.write(content);
+    }
+}
+}
+
 
     static class ItemsHandler implements HttpHandler {
 
