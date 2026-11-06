@@ -638,6 +638,10 @@ footer {
     font-size: 1.1rem;
 }
 
+.cart-tax-row {
+    color: #52675a;
+}
+
 .continue-shopping {
     display: inline-block;
     margin-top: 12px;
