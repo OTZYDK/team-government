@@ -1,7 +1,7 @@
 (function () {
     const STORAGE_KEY = "dallasCollegeBookstoreCart";
-    const API_URL = "http://localhost:8080/api/items";
-    // Temporary demo fallback from the existing CartItem.java prototype.
+    const API_URL = "/api/items"; //switched the API URL from an absolute URL to a relative one
+   // Temporary demo fallback from the existing CartItem.java prototype.
     // Remove this fallback once the API supplies each item's taxRate/taxExempt fields.
     const DEMO_TAX_RATE_PERCENT = 2.9;
     let temporaryCart = [];
@@ -130,7 +130,7 @@
                 const unitPrice = Number(item.price) || 0;
                 subtotal += unitPrice * line.quantity;
                 price.textContent = formatMoney(unitPrice) + " each";
-
+                
                 const rawTaxExempt = item.taxExempt ?? item.tax_exempt;
                 const taxExempt = rawTaxExempt === true || String(rawTaxExempt).toLowerCase() === "true";
                 const rawTaxRate = item.taxRatePercent ?? item.taxRate ?? item.tax_rate;
