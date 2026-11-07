@@ -698,9 +698,10 @@ button:disabled {
     }
 }
 
+/* =================================
+   SHOPPING CART
 /* =====================================
    PRODUCT SEARCH
-===================================== */
 
 .search-form {
     display: flex;
@@ -731,7 +732,6 @@ button:disabled {
 
 /* =====================================
    CATEGORY BROWSING
-===================================== */
 
 .category-links {
     display: flex;
@@ -768,7 +768,6 @@ button:disabled {
 
 /* =====================================
    FORMS AND INPUTS
-===================================== */
 
 #manager input,
 #manager select,
@@ -814,7 +813,6 @@ button:disabled {
 
 /* =====================================
    TAX EXEMPT OPTIONS
-===================================== */
 
 .inline-option {
     display: flex !important;
@@ -837,7 +835,6 @@ button:disabled {
 
 /* =====================================
    DISCOUNT CATEGORY FIELDSET
-===================================== */
 
 #discount-management fieldset {
     border: 1px solid #ccc;
@@ -853,7 +850,6 @@ button:disabled {
 
 /* =====================================
    SHOPPING CART
-===================================== */
 
 .cart-content {
     background-color: #f5f5f5;
@@ -866,6 +862,7 @@ button:disabled {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+    margin-top: 20px;
 }
 
 .cart-actions button {
@@ -873,6 +870,7 @@ button:disabled {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 15px;
 }
 
 #view-cart {
@@ -880,6 +878,12 @@ button:disabled {
     color: white;
 }
 
+#view-cart:hover {
+    background-color: #004d35;
+}
+
+/* =================================
+   CANCEL TRANSACTION
 .cancel-button {
     background-color: #b22222;
     color: white;
@@ -907,6 +911,10 @@ button:disabled {
     margin-top: 15px;
 }
 
+.confirmation-content h3 {
+    color: #8b0000;
+}
+
 .confirmation-content button {
     padding: 10px 15px;
     margin: 5px;
@@ -925,6 +933,12 @@ button:disabled {
     color: white;
 }
 
+.cancel-notice {
+    color: #555;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
 #cancel-message {
     margin-top: 15px;
     font-weight: bold;
@@ -932,7 +946,6 @@ button:disabled {
 
 /* =====================================
    ITEMIZED RECEIPT
-===================================== */
 
 .receipt-heading {
     margin-bottom: 20px;
@@ -980,9 +993,10 @@ button:disabled {
     cursor: pointer;
 }
 
+
+@media screen and (max-width: 600px) {
 /* =====================================
    MOBILE RESPONSIVE DESIGN
-===================================== */
 
 @media screen and (max-width: 600px) {
     .search-form,
@@ -1008,16 +1022,13 @@ button:disabled {
 
     .receipt-table th,
     .receipt-table td {
-        padding: 7px;
-        font-size: 12px;
+        padding: 8px;
+        font-size: 13px;
     }
 }
 
-/* =====================================
+/* =================================
    PRINT RECEIPT
-===================================== */
-
-@media print {
     header,
     nav,
     footer,
@@ -1040,7 +1051,7 @@ button:disabled {
 
     .receipt-table th {
         background-color: #ddd !important;
-        color: black !important;
+        color: black ! important;
     }
 }
 
