@@ -112,6 +112,8 @@
                     </tr>
                 </tbody>
 
+        <!-- Featured Products -->
+        <!-- Keep this ID for the existing app.js -->
                 <tfoot>
                     <tr>
                         <td colspan="5">Subtotal</td>
@@ -245,59 +247,9 @@
 
         <!-- Shopping Cart -->
         <section id="cart" class="welcome">
-
             <h2>Shopping Cart</h2>
-
-            <p>Review your items before completing your purchase.</p>
-
-            <div class="cart-content">
-                <p>Your shopping cart items will appear here.</p>
-            </div>
-
-            <div class="cart-actions">
-                <button type="button" id="view-cart">
-                    View Cart
-                </button>
-
-                <button
-                    type="button"
-                    id="cancel-transaction"
-                    class="cancel-button"
-                >
-                    Cancel Entire Transaction
-                </button>
-            </div>
-
-            <!-- Cancellation Confirmation -->
-            <details class="cancel-confirmation">
-                <summary>Confirm Transaction Cancellation</summary>
-
-                <div class="confirmation-content">
-                    <h3>Are you sure?</h3>
-
-                    <p>
-                        You are about to cancel your entire transaction.
-                        All items in your shopping cart will be removed
-                        if you confirm.
-                    </p>
-
-                    <button type="button" id="confirm-cancel">
-                        Yes, Cancel My Transaction
-                    </button>
-
-                    <button type="button" id="keep-shopping">
-                        No, Keep Shopping
-                    </button>
-                </div>
-            </details>
-
-            <p class="cancel-notice">
-                Please review your shopping cart before confirming
-                a transaction cancellation.
-            </p>
-
-            <p id="cancel-message" aria-live="polite"></p>
-
+            <p>Your cart is currently empty.</p>
+            <button type="button">View Cart</button>
         </section>
 
         <!-- Itemized Receipt -->
