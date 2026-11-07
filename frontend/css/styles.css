@@ -637,6 +637,10 @@ footer {
     font-size: 1.1rem;
 }
 
+.cart-tax-row {
+    color: #52675a;
+}
+
 .continue-shopping {
     display: inline-block;
     margin-top: 12px;
@@ -696,7 +700,156 @@ button:disabled {
 
 /* =================================
    SHOPPING CART
-================================= */
+/* =====================================
+   PRODUCT SEARCH
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.search-form input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-form button,
+#category-filter-form button {
+    background-color: #006747;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-form button:hover,
+#category-filter-form button:hover {
+    background-color: #004d35;
+}
+
+/* =====================================
+   CATEGORY BROWSING
+
+.category-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.category-links a {
+    display: inline-block;
+    background-color: #006747;
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.category-links a:hover {
+    background-color: #004d35;
+}
+
+#category-filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.category-anchor {
+    padding: 15px;
+    margin: 10px 0;
+}
+
+/* =====================================
+   FORMS AND INPUTS
+
+#manager input,
+#manager select,
+#tax-settings input,
+#tax-settings select,
+#discount-management input,
+#discount-management select,
+#manager-add-product input {
+    width: 100%;
+    padding: 11px;
+    margin: 7px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#manager label,
+#tax-settings label,
+#discount-management label,
+#manager-add-product label {
+    display: block;
+    font-weight: bold;
+}
+
+#manager button,
+#tax-settings button,
+#discount-management button,
+#manager-add-product button {
+    background-color: #006747;
+    color: white;
+    padding: 11px 17px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#manager button:hover,
+#tax-settings button:hover,
+#discount-management button:hover,
+#manager-add-product button:hover {
+    background-color: #004d35;
+}
+
+/* =====================================
+   TAX EXEMPT OPTIONS
+
+.inline-option {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    font-weight: normal !important;
+}
+
+.inline-option input[type="checkbox"] {
+    width: auto !important;
+    margin: 0 !important;
+}
+
+.form-note {
+    color: #555;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+/* =====================================
+   DISCOUNT CATEGORY FIELDSET
+
+#discount-management fieldset {
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+#discount-management legend {
+    font-weight: bold;
+    padding: 0 8px;
+}
+
+/* =====================================
+   SHOPPING CART
 
 .cart-content {
     background-color: #f5f5f5;
@@ -731,8 +884,6 @@ button:disabled {
 
 /* =================================
    CANCEL TRANSACTION
-================================= */
-
 .cancel-button {
     background-color: #b22222;
     color: white;
@@ -793,9 +944,8 @@ button:disabled {
     font-weight: bold;
 }
 
-/* =================================
+/* =====================================
    ITEMIZED RECEIPT
-================================= */
 
 .receipt-heading {
     margin-bottom: 20px;
@@ -843,15 +993,24 @@ button:disabled {
     cursor: pointer;
 }
 
-.print-button:hover {
-    background-color: #004d35;
-}
-
-/* =================================
-   MOBILE RESPONSIVE DESIGN
-================================= */
 
 @media screen and (max-width: 600px) {
+/* =====================================
+   MOBILE RESPONSIVE DESIGN
+
+@media screen and (max-width: 600px) {
+    .search-form,
+    #category-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-form input,
+    .search-form button,
+    #category-filter-form select,
+    #category-filter-form button {
+        width: 100%;
+    }
 
     .cart-actions {
         flex-direction: column;
@@ -870,10 +1029,6 @@ button:disabled {
 
 /* =================================
    PRINT RECEIPT
-================================= */
-
-@media print {
-
     header,
     nav,
     footer,

@@ -1,6 +1,9 @@
 (function () {
     const STORAGE_KEY = "dallasCollegeBookstoreCart";
-    const API_URL = "http://localhost:8080/api/items";
+    const API_URL = "/api/items"; //switched the API URL from an absolute URL to a relative one
+   // Temporary demo fallback from the existing CartItem.java prototype.
+    // Remove this fallback once the API supplies each item's taxRate/taxExempt fields.
+    const DEMO_TAX_RATE_PERCENT = 2.9;
     let temporaryCart = [];
     let catalogItems = [];
 
@@ -98,6 +101,7 @@
         const cart = readCart();
         const itemById = new Map(items.map(item => [Number(item.id), item]));
         let subtotal = 0;
+        let taxTotal = 0;
         container.replaceChildren();
 
         if (cart.length === 0) {
@@ -126,6 +130,22 @@
                 const unitPrice = Number(item.price) || 0;
                 subtotal += unitPrice * line.quantity;
                 price.textContent = formatMoney(unitPrice) + " each";
+                
+                const rawTaxExempt = item.taxExempt ?? item.tax_exempt;
+                const taxExempt = rawTaxExempt === true || String(rawTaxExempt).toLowerCase() === "true";
+                const rawTaxRate = item.taxRatePercent ?? item.taxRate ?? item.tax_rate;
+                const parsedTaxRate = Number(rawTaxRate);
+                const hasItemTaxRate = rawTaxRate !== undefined
+                    && rawTaxRate !== null
+                    && rawTaxRate !== ""
+                    && Number.isFinite(parsedTaxRate)
+                    && parsedTaxRate >= 0;
+
+                if (!taxExempt) {
+                    const taxRatePercent = hasItemTaxRate ? parsedTaxRate : DEMO_TAX_RATE_PERCENT;
+                    const lineTax = unitPrice * line.quantity * taxRatePercent / 100;
+                    taxTotal += Math.round((lineTax + Number.EPSILON) * 100) / 100;
+                }
             } else {
                 price.textContent = "Unavailable";
             }
@@ -162,8 +182,10 @@
 
         const subtotalElement = document.getElementById("cart-subtotal");
         const totalElement = document.getElementById("cart-total");
+        const taxElement = document.getElementById("cart-tax");
         if (subtotalElement) subtotalElement.textContent = formatMoney(subtotal);
-        if (totalElement) totalElement.textContent = formatMoney(subtotal);
+        if (taxElement) taxElement.textContent = formatMoney(taxTotal);
+        if (totalElement) totalElement.textContent = formatMoney(subtotal + taxTotal);
         updateCartCount(cart);
     }
 
