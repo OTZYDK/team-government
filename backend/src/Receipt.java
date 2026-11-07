@@ -1,9 +1,7 @@
 import java.util.ArrayList;
 
 /*
-RECEPT FORMAT
-
-
+RECEPT FORMAT --->
 DESCRIPION
 	amount - item - price
 		x% off -x.yz$
