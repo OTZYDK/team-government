@@ -31,14 +31,10 @@ TOTAL PRICE:
 
 PROVIDED CASH:
 CHANGE: 
+_____________________________
 
-
-
-
-
-
-first get list of all Sales applied to receipt items
-then
+Class is designed to accept an ArrayList and Payment amount, then generate a receipt object
+This class will derive all the information necessary for a receipt based on the list of Cart Items provided
 
 */
 
