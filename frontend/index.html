@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dallas College Bookstore</title>
+
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
@@ -73,10 +75,96 @@
                     <a href="#course-supplies">Course Supplies</a>
                 </nav>
             </div>
-        </section>
+        </details>
+
+        <p id="cancel-message" aria-live="polite"></p>
+    </section>
+
+    <!-- Itemized Receipt -->
+    <section id="receipt" class="welcome">
+        <h2>Itemized Receipt</h2>
+
+        <div class="receipt-heading">
+            <h3>Dallas College Bookstore</h3>
+            <p><strong>Receipt No.:</strong> DC-1001</p>
+            <p><strong>Customer:</strong> Student</p>
+        </div>
+
+        <div class="receipt-table-wrapper">
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty.</th>
+                        <th>Unit Price</th>
+                        <th>Tax</th>
+                        <th>Discount</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td colspan="6">
+                            Your actual purchased items will appear here
+                            when connected to the cart.
+                        </td>
+                    </tr>
+                </tbody>
 
         <!-- Featured Products -->
         <!-- Keep this ID for the existing app.js -->
+                <tfoot>
+                    <tr>
+                        <td colspan="5">Subtotal</td>
+                        <td>Calculated at checkout</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Tax</td>
+                        <td>Calculated at checkout</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Discount</td>
+                        <td>Calculated at checkout</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><strong>Total</strong></td>
+                        <td><strong>Calculated at checkout</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <p class="receipt-thanks">
+            Thank you for shopping at Dallas College Bookstore!
+        </p>
+
+        <button type="button" class="print-button"
+                onclick="window.print()">
+            Print Receipt
+        </button>
+    </section>
+
+    <!-- Manager Catalog -->
+    <section id="manager" class="welcome">
+        <h2>Manager Catalog</h2>
+        <p>Add, edit, or remove bookstore items.</p>
+
+        <!-- Preserve existing form and field IDs -->
+        <form id="item-form">
+            <label for="item-id">Item ID</label>
+            <input type="number" id="item-id"
+                   placeholder="Item ID" required>
+
+            <label for="item-price">Price ($)</label>
+            <input type="number" id="item-price"
+                   placeholder="Price" min="0" step="0.01" required>
+
+            <label for="item-description">Description</label>
+            <input type="text" id="item-description"
+                   placeholder="Product description" required>
+
+        <!-- Featured Products -->
         <section id="books">
             <h2>Featured Products</h2>
 
@@ -91,6 +179,7 @@
             <p>Add, edit, or remove bookstore items.</p>
 
             <form id="item-form">
+
                 <label for="item-id">Item ID</label>
                 <input
                     type="number"
@@ -142,12 +231,14 @@
                     <button type="button" id="update-item">Update Item</button>
                     <button type="button" id="delete-item">Delete Item</button>
                 </div>
+
             </form>
         </section>
 
         <!-- School Supplies -->
         <section id="supplies" class="welcome">
             <h2>School Supplies</h2>
+
             <p>
                 Shop notebooks, calculators, pens, backpacks,
                 and other supplies for your classes.
@@ -163,15 +254,21 @@
 
         <!-- Itemized Receipt -->
         <section id="receipt" class="welcome">
+
             <h2>Itemized Receipt</h2>
 
-            <p><strong>Dallas College Bookstore</strong></p>
-            <p><strong>Receipt No.:</strong> DC-1001</p>
-            <p><strong>Date:</strong> October 29, 2026</p>
-            <p><strong>Customer:</strong> Student</p>
+            <div class="receipt-heading">
+                <h3>Dallas College Bookstore</h3>
+
+                <p><strong>Receipt No.:</strong> DC-1001</p>
+                <p><strong>Date:</strong> November 5, 2026</p>
+                <p><strong>Customer:</strong> Student</p>
+            </div>
 
             <div class="receipt-table-wrapper">
+
                 <table class="receipt-table">
+
                     <thead>
                         <tr>
                             <th>Item</th>
@@ -220,24 +317,34 @@
                             <td><strong>$84.39</strong></td>
                         </tr>
                     </tfoot>
+
                 </table>
+
             </div>
 
             <p class="receipt-thanks">
                 Thank you for shopping at Dallas College Bookstore!
             </p>
 
-            <button type="button" onclick="window.print()">
+            <button
+                type="button"
+                class="print-button"
+                onclick="window.print()"
+            >
                 Print Receipt
             </button>
+
         </section>
 
         <!-- Add a Bookstore Product -->
         <section id="manager-add-product" class="welcome">
+
             <h2>Add a Bookstore Product</h2>
+
             <p>Use this form to add a new bookstore product.</p>
 
             <form id="addItemForm">
+
                 <label for="product-id">ID:</label>
                 <input
                     type="number"
@@ -281,9 +388,11 @@
                 >
 
                 <button type="submit">Add Product</button>
+
             </form>
 
             <div id="form-message"></div>
+
         </section>
 
     </main>
