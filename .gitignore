@@ -1,7 +1,30 @@
+# Build artifacts (created by javac/jar/jpackage)
+compiled/
+package-input/
+output/
+manifest.txt
+
+# Compiled Java classes (already covered by *.class but being explicit)
 *.class
-bin/
-target/
-.vscode/
+
+# Packaged binaries — do not commit these
+*.jar
+*.exe
+*.msi
+
+# OS junk
 .DS_Store
 Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
 *.log
+
+# Build tool output
+bin/
+target/
+build/
+dist/
