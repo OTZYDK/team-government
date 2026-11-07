@@ -697,6 +697,12 @@ button:disabled {
         flex-direction: column;
     }
 }
+/* Itemized Receipt */
+
+#receipt {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 24px;
 
 /* =================================
    SHOPPING CART
@@ -958,100 +964,66 @@ button:disabled {
 
 .receipt-table {
     width: 100%;
+    margin: 20px 0;
     border-collapse: collapse;
-    margin-top: 15px;
+    background: #ffffff;
 }
 
 .receipt-table th,
 .receipt-table td {
-    border: 1px solid #ddd;
     padding: 12px;
+    border: 1px solid #dddddd;
     text-align: left;
 }
 
 .receipt-table th {
-    background-color: #006747;
-    color: white;
+    background-color: #006633;
+    color: #ffffff;
 }
 
-.receipt-table tfoot {
-    background-color: #f1f1f1;
-    font-weight: bold;
+.receipt-table tfoot td {
+    text-align: right;
+}
+
+.receipt-table tfoot tr:last-child {
+    color: #006633;
+    font-size: 1.1rem;
 }
 
 .receipt-thanks {
-    margin-top: 20px;
-    font-weight: bold;
+    margin-top: 24px;
+    text-align: center;
 }
 
-.print-button {
-    background-color: #006747;
-    color: white;
-    padding: 12px 20px;
+#receipt button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 18px;
+    color: #ffffff;
+    background-color: #006633;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-
-@media screen and (max-width: 600px) {
-/* =====================================
-   MOBILE RESPONSIVE DESIGN
-
-@media screen and (max-width: 600px) {
-    .search-form,
-    #category-filter-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-form input,
-    .search-form button,
-    #category-filter-form select,
-    #category-filter-form button {
-        width: 100%;
-    }
-
-    .cart-actions {
-        flex-direction: column;
-    }
-
-    .cart-actions button {
-        width: 100%;
-    }
-
-    .receipt-table th,
-    .receipt-table td {
-        padding: 8px;
-        font-size: 13px;
-    }
+#receipt button:hover {
+    background-color: #004d26;
 }
 
-/* =================================
-   PRINT RECEIPT
-    header,
-    nav,
-    footer,
-    main > section:not(#receipt),
-    .print-button {
-        display: none !important;
+@media print {
+    body > header,
+    body > nav,
+    body > footer,
+    #receipt button {
+        display: none;
     }
 
     #receipt {
-        display: block !important;
-        width: 100%;
         margin: 0;
-        padding: 20px;
+        max-width: none;
+        border: none;
         box-shadow: none;
     }
-
-    .receipt-table {
-        width: 100%;
-    }
-
-    .receipt-table th {
-        background-color: #ddd !important;
-        color: black ! important;
-    }
 }
+
 
