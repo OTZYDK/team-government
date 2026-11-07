@@ -1,51 +1,37 @@
 /*THE CART ITEM CLASS
 
-The CartItem class has two constructors, one that takes only an item argument
-and one that takes up to 3 optional arguments, these arguments being:
-discount_rate, tax_exempt, and unit_amount. Here are examples of the constructor being used ->
+The CartItem class has three constructors, one that takes only an item argument
 
-	CartItem example = new CartItem(Item_Example, "20", "true", "6");
-	Discount Rate -> 20%, Tax Exempt -> True, Unit Amount -> 6
+One Makes a plain cart item with no discounts applied
+the other two accept a Sale object or list of sales as an argument
+Sales objects hold discounts and their conditions, and are read in from a csv file/sql database
 
-If you want to skip an argument, use "" so that constructors knows, 
-any value not provided will use its default value ->
+This allows each cart item to keep track of the sales it has applied to it
+and calculate a final discount from that
 
-	CartItem example = new CartItem(Item_Example, "", "", "");
-	Discount Rate -> 0%, Tax Exempt -> false, Unit Amount -> 1
-	
-Finally, if you want to easily convert arguments to string, simply add ""->
-	CartItem example = new CartItem(Item_Example, example_double + "", example_bool + "", example_int + "");
-	Discount Rate -> example_double, Tax Exempt -> example_bool, Unit Amount -> example_int
 
-I designed it this way so that we can could have a more flexible constructor, 
-that allows you to skip certain arguments if necessary. 
+
 */
-
-
-@FunctionalInterface
-interface CalculatePrice
-{
-    double calculate(double unitPrice, double discountRate, double taxRate);
-    //Interface-Lambda to calculate price
-}
+import java.util.ArrayList;
 
 public class CartItem{
-	//Define Lambda to calculate the price
-	CalculatePrice updatePrice = (unitPrice, discountRate, taxRate) -> unitPrice + ((unitPrice/100) * taxRate) - ((unitPrice/100) * discountRate);
+
 	
 	//Default Attributes
-	private double discount_rate = 0;
-	private double tax_rate = 2.9;
 	private int unit_amount = 1;
-	private boolean tax_exempt = false;
+	
+	//Cart Item Discount info
+	private Discount ItemDiscount = new Discount();
 	
 	//Constructed Attributes
 	final CatalogItem item;
 	final double unit_price;
 	
+	//List of All Sales applied
+	private ArrayList<Sale> ItemSales = new ArrayList<Sale>(); 
+	
 	//Calculated Attributes
 	private double adjusted_price;
-	private double total_price;
 	
 	//------------CONSTRUCTORS
 	//PRIMARY CONSTRUCTOR
@@ -53,86 +39,88 @@ public class CartItem{
 		this.item = item;
 		unit_price = item.Price;
 		
+		//uses default sales data for price
+		ItemDiscount = new Discount();
+		updateDiscountData();
+	}
+	
+	//Passing A single sale object
+	public CartItem(CatalogItem item, Sale sale) {
+		this.item = item;
+		unit_price = item.Price;
+		
 		//Calculate Price(s)
-		setAdjustedPrice();
+		addSale(sale);
+		updateDiscountData();
 	}
 		
+	//passing many sales objects
 	//CONSTRUCTOR WITH OPTIONAL PARAMTERS: discount_rate, tax_exempt, unit_amount, USE "" WHEN NO ARG
-    public CartItem(CatalogItem item, String... args) {
+    public CartItem(CatalogItem item, ArrayList<Sale> args) {
     	//SET CATALOG ITEM
 		this.item = item;
 		unit_price = item.Price;
 		
-		//SET OPTIONAL ARGUMENTS
-        //ARGUMENT ORDER: -> double discount_rate, boolean tax_exempt, int unit_amount
-        //Iterate through provided arguments, 
-    	//checking to makes sure the conversions do not fail
-		
-    	//Hold all potential arguments
-    	double discount_rate;
-    	boolean tax_exempt;
-    	int unit_amount;
+		//add all sales provided, checking them with addSale
+		for (Sale i: args) {addSale(i);}
     	
-    	//ITERATE THROUGH ARGUMENTS TO CHECK VALUES
-		for (int i = 0; i < args.length; i++)
-		{
-        	//ARG 0 - Discount Rate
-        	if (i == 0 && args[i] != "")
-        	{
-                try {discount_rate = Double.parseDouble(args[i]); setDiscount(discount_rate);}
-                catch (Exception e) {System.out.println("Discount Rate not provided");}
-        	}
-        	
-        	//ARG 1 - Tax Exempt
-        	if (i == 1 && args[i] != "")
-        	{
-                try {tax_exempt = Boolean.parseBoolean(args[i]); setTaxExempt(tax_exempt);}
-                catch (Exception e) {System.out.println("Discount Rate not provided");}
-        	}
-        	
-        	//ARG 2 - Unit Amount
-        	if (i == 2 && args[i] != "")
-        	{
-                try {unit_amount= Integer.parseInt(args[i]); setAmount(unit_amount);}
-                catch (Exception e) {System.out.println("Amount was not provided");}
-        	}
-		}
-		
-        //System.out.println(); 
+    	//add to list of discounts
+		updateDiscountData();
     }
 
 	
-	//------------SETTERS
-    //Update Adjusted Price - Call this any time the amount, discount, or tax parameters are updated
-	private void setAdjustedPrice() {
-		//Correct Unit Amount
-		if (unit_amount < 1) {unit_amount = 1;}
+	//------------INTERNAL SETTERS
+	private void updateDiscountData() 
+	{
+		Boolean tax = false;
+		Double rate = 0.0;
+		Double dollar = 0.0;
 		
-		//Apply Tax Rate if we are not tax exempt
-		if (tax_exempt) 
+		if (ItemSales.isEmpty())
 		{
-			adjusted_price = updatePrice.calculate(unit_price, discount_rate, 0);
-			total_price = updatePrice.calculate(unit_price*unit_amount, discount_rate, 0);		
+			setAdjustedPrice();
 		}
-		else 
+		else
 		{
-			adjusted_price = updatePrice.calculate(unit_price, discount_rate, tax_rate);
-			total_price = updatePrice.calculate(unit_price*unit_amount, discount_rate, tax_rate);
+			//For each sale applied to this item
+			for (Sale v : ItemSales)
+			{
+				//pull discount from sale
+				Discount i = v.getDiscount();
+				
+				//If a discount applies tax exemption, keep it
+				if (i.TaxExempt) {tax = true;}
+				
+				//Combine Discounts
+				//If the discount is less then 100%
+				if (rate + i.DiscountRate < 100) {rate += i.DiscountRate;}
+				
+				//If the dollar discount is less than the price with the discount applied
+				if (dollar + i.DiscountDollar < (unit_price - ((unit_price / 100) * rate))) {dollar += i.DiscountDollar;}
+				
+			}
+			
+			ItemDiscount = new Discount(tax, rate, dollar);
+			
+			//Update Price based on discount data
+			setAdjustedPrice();
 		}
 	}
 	
-	
-	//SET TAX EXEMPT - PROVIDE VALUE OR CALL METHOD TO FLIP IT
-	public void setTaxExempt(boolean tax_exempt) {this.tax_exempt = tax_exempt; setAdjustedPrice();}
-	public void setExemptTrue() {this.tax_exempt = true; setAdjustedPrice();}
-	public void setExemptFalse() {this.tax_exempt = false; setAdjustedPrice();}
-	
-	//SET DISCOUNT
-	public void setDiscount(double discount_rate) {
-		if (discount_rate > 0) {this.discount_rate = discount_rate;}
-		setAdjustedPrice();
+	private void setAdjustedPrice() 
+	{
+		adjusted_price = ItemDiscount.CalcPrice(unit_price);
 	}
 	
+	private void addSale(Sale arg) 
+	{
+		if (arg.getValid()) {ItemSales.add(arg);}
+		
+		updateDiscountData();
+		
+	}
+	
+	//------------SETTERS
 	//SET AMOUNT
 	public void setAmount(int unit_amount) {
 		//If new amount is above 0, else do not update
@@ -148,12 +136,72 @@ public class CartItem{
 	
 	
 	//------------GETTERS
-	public double getDiscountRate() {return discount_rate;}
-	public double getTaxRate() {return tax_rate;}
+	public double getDiscountRate() {return ItemDiscount.DiscountRate;}
+	public Discount getDiscount() {return ItemDiscount;}
+	public double getDiscountDollar() {return ItemDiscount.DiscountDollar;}
+	public double getTaxRate() {return ItemDiscount.taxRate;}
 	public int getUnitAmount() {return unit_amount;}
-	public boolean getTaxExempt() {return tax_exempt;}
+	public boolean getTaxExempt() {return ItemDiscount.TaxExempt;}
 	public double getAdjustedPrice() {return adjusted_price;}
-	public double getTotalPrice() {return total_price;}
+	public ArrayList<Sale> getSales() {return ItemSales;}
+	public ArrayList<String> getTab() 
+	{
+		
+		//returns list of strings to print in reciet
+		
+		ArrayList<String> build = new ArrayList<String>(); 
+		
+		//-----FIELDS
+		//Amount
+		build.add(Integer.toString(unit_amount));
+		
+		//Description
+		build.add(item.Description);
+		
+		//Price
+		build.add(Double.toString(util.priceFormat(unit_price * unit_amount)));
+		
+		
+		if (ItemDiscount.isValid())
+		{
+			if (ItemDiscount.DiscountRate > 0)
+			{build.add(Double.toString(ItemDiscount.DiscountRate) + "%");}
+			else {build.add("");}
+			
+			if (ItemDiscount.DiscountDollar > 0)
+			{build.add(Double.toString(util.priceFormat(ItemDiscount.DiscountDollar))+ "$");}
+			else {build.add("");}
+		}
+		
+		//optional -
+		//% off
+		//dollar off
+		
+		//build = unit_amount + " " + item.Description + ": " + unit_price + "$";
+		
+		
+		return build;
+	}
+	
+	
+	public double CalcPrice() 
+	{return ItemDiscount.CalcPrice(unit_price);}
+	
+	public double getTaxAmount() 
+	{
+		return ItemDiscount.calcTaxAmount(unit_price);
+	}
+	
+	public double getPercentOff() 
+	{
+		return ItemDiscount.calcPercentOff(unit_price);
+	}
+	
+	public double getDollarOff() 
+	{
+		return ItemDiscount.getDollarOff(unit_price);
+	}
+	
 	
 	//------------PRINTERS
 	public void printFields() {
@@ -167,12 +215,37 @@ public class CartItem{
 		System.out.println("\nPRICE INFORMATION:");
 		System.out.println("UNIT PRICE: " + unit_price);
 		System.out.println("UNIT AMOUNT: " + unit_amount);
-		System.out.println("DISCOUNT RATE: " + discount_rate);
-		System.out.println("TAX EXEMPT: " + tax_exempt);
+		System.out.println("DISCOUNT RATE: " + ItemDiscount.DiscountRate);
+		System.out.println("DISCOUNT DOLLAR OFF: " + ItemDiscount.DiscountDollar);
+		System.out.println("TAX EXEMPT: " + ItemDiscount.TaxExempt);
 		
 		
 		System.out.println("ADJUSTED PRICE: " + adjusted_price);
-		System.out.println("TOTAL PRICE: " + total_price);
+	}
+	
+	public void printSales()
+	{
+		
+		if (ItemSales.isEmpty())
+		{System.out.println("\nNO SALE DATA FOR ITEM: " + item.ID);}
+		else
+		{
+			System.out.println("\nALL SALE DATA FOR ITEM: " + item.ID);
+			for (Sale i: ItemSales)
+			{
+				if (i.getValid()) {i.printSaleData();}
+				
+			}
+			
+			System.out.println("\nPRICE INFORMATION:");
+			System.out.println("UNIT PRICE: " + unit_price);
+			System.out.println("DISCOUNT RATE: " + ItemDiscount.DiscountRate);
+			System.out.println("DISCOUNT DOLLAR OFF: " + ItemDiscount.DiscountDollar);
+			System.out.println("TAX EXEMPT: " + ItemDiscount.TaxExempt);
+			System.out.println("ADJUSTED PRICE: " + adjusted_price);
+		}
+		
+
 	}
 	
 }

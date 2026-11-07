@@ -1,7 +1,6 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -483,6 +482,7 @@ public void handle(HttpExchange exchange) throws IOException {
         );
     }
 
+    //UPDATED TO INCLUDE SUPPLY FIELD
     private static CatalogItem createItemFromJson(
             String json) {
 
@@ -490,6 +490,9 @@ public void handle(HttpExchange exchange) throws IOException {
 
             int id =
                     (int) getJsonNumber(json, "id");
+
+            int supply =
+                    (int) getJsonNumber(json, "supply");
 
             double price =
                     getJsonNumber(json, "price");
@@ -505,6 +508,7 @@ public void handle(HttpExchange exchange) throws IOException {
 
             return new CatalogItem(
                     id,
+                    supply,
                     price,
                     description,
                     category,

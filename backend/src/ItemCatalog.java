@@ -34,8 +34,8 @@ public final class ItemCatalog {
 	
 	//---------VARIABLES
 	//File Paths
-	private static String csvRelativePath = "backend\\src\\data\\items.csv";
-	private static String dbRelativePath = "backend\\src\\data\\inventory.db";
+	private static String csvRelativePath = "data/items.csv";
+	private static String dbRelativePath = "data/inventory.db";
 	
 	//Item Catalog and Last Result
 	final static ArrayList<CatalogItem> ItemCatalog = new ArrayList<CatalogItem>(); 
@@ -44,7 +44,7 @@ public final class ItemCatalog {
 	//Database Located - indicates initialization
 	static private Boolean dbLocated = false;
 	
-	
+	static private Boolean printEnabled = false;
 
 	//---------PRINTERS
 	//PRINT LAST RESULT SAVED
@@ -58,8 +58,9 @@ public final class ItemCatalog {
 	{
 		try {
 			System.out.printf(
-			        "%d | %.2f | %s | %s | %s%n",
+			        "%d | %d | %.2f | %s | %s | %s%n",
 			        rs.getInt("ID"),
+			        rs.getInt("Supply"),
 			        rs.getDouble("Price"),
 			        rs.getString("Description"),
 			        rs.getString("Category"),
@@ -97,14 +98,15 @@ public final class ItemCatalog {
             // Create or open the SQLite database.
             try (Connection conn = DriverManager.getConnection(url)) {
 
-                System.out.println("FILE CREATED (file name): " +dbFile.getFileName());
-                System.out.println("FILE CREATED (file path): " +dbFile);
+                System.out.println("ITEM FILE CREATED (file name): " +dbFile.getFileName());
+                System.out.println("ITEM FILE CREATED (file path): " +dbFile);
 
                 //CREATE THE TABLE (STATEMENT)
                 try (Statement stmt = conn.createStatement()) {
                     stmt.execute("""
                         CREATE TABLE IF NOT EXISTS Items (
                             ID INTEGER PRIMARY KEY,
+                            Supply REAL,
                             Price REAL,
                             Description TEXT,
                             Category TEXT,
@@ -116,8 +118,8 @@ public final class ItemCatalog {
                 //Import CSV rows into SQLite.
                 String insertSQL = """
                     INSERT OR REPLACE INTO Items
-                    (ID, Price, Description, Category, Tags)
-                    VALUES (?, ?, ?, ?, ?)
+                    (ID, Supply, Price, Description, Category, Tags)
+                    VALUES (?, ?, ?, ?, ?, ?)
                     """;
 
                 try (	//Try to open CSV and make empty statement
@@ -139,16 +141,17 @@ public final class ItemCatalog {
                         String[] fields = line.split(",", -1);
                         
                         //Check for too many fields
-                        if (fields.length != 5) {
+                        if (fields.length != 6) {
                             System.out.println("Skipping invalid row: " + line);
                             continue;
                         }
 
                         ps.setInt(1, Integer.parseInt(fields[0].trim()));
-                        ps.setDouble(2, Double.parseDouble(fields[1].trim()));
-                        ps.setString(3, fields[2]);
+                        ps.setInt(2, Integer.parseInt(fields[1].trim()));
+                        ps.setDouble(3, Double.parseDouble(fields[2].trim()));
                         ps.setString(4, fields[3]);
                         ps.setString(5, fields[4]);
+                        ps.setString(6, fields[5]);
 
                         ps.executeUpdate();
                     }
@@ -158,7 +161,7 @@ public final class ItemCatalog {
                 
                 //PRINT ALL ROWS TO ITEM CATALOG LIST
                 String query = """
-                    SELECT ID, Price, Description, Category, Tags
+                    SELECT ID, Supply, Price, Description, Category, Tags
                     FROM Items
                     ORDER BY ID
                     """;
@@ -166,22 +169,31 @@ public final class ItemCatalog {
                 try (Statement stmt = conn.createStatement();
                      ResultSet rs = stmt.executeQuery(query)) {
 
-                    System.out.println("\n--- ALL DATABASE ROWS ---");
-                    util.fieldHeader();
+                	
+                	if (printEnabled) 
+                	{
+                        System.out.println("\n--- ALL DATABASE ROWS ---");
+                        util.fieldHeader();
+                	}
+
 
                     while (rs.next()) {
-                    	printResult(rs); 
+                    	
+                    	if (printEnabled) {printResult(rs); }
+                    	
                     	
                         int ID = rs.getInt("ID");
+                        int Supply = rs.getInt("Supply");
                         double Price = rs.getDouble("Price");
                         String desc = rs.getString("Description");
                         String category = rs.getString("Category");
                         String tags = rs.getString("Tags");
                 		
-                		ItemCatalog.add(new CatalogItem(ID,Price,desc,category,tags));
+                		ItemCatalog.add(new CatalogItem(ID,Supply,Price,desc,category,tags));
                     }
                     
                     dbLocated = true;
+                    printDisabled();
                 }
    
             }
@@ -220,15 +232,12 @@ public final class ItemCatalog {
 			}
 			else 
 			{
-				//csvRelativePath = "data/items.csv";
-				//dbRelativePath = "data/inventory.db";
+				csvRelativePath = "data/items.csv";
+				dbRelativePath = "data/inventory.db";
 				LoadCreateDatabase(csvRelativePath, dbRelativePath);
 			}
 		}
 	}
-	
-	
-	
 	
 	
 	//---------DATABASE FUNCTIONS
@@ -236,7 +245,7 @@ public final class ItemCatalog {
 	public static ArrayList<CatalogItem> EnterQuery(String arg_query) {
 		//Create database if it hasnt been done yet
 		if (!dbLocated)
-		{init(null, null);}
+		{init();}
 		
 		//Create File Path
         Path dbFile = Path.of(dbRelativePath).toAbsolutePath();
@@ -246,10 +255,6 @@ public final class ItemCatalog {
         try {
             // Create or open the SQLite database.
             try (Connection conn = DriverManager.getConnection(url)) {
-
-            	//PRINT FILE PATH
-                System.out.println("FILE CREATED (file name): " +dbFile.getFileName());
-                System.out.println("FILE CREATED (file path): " +dbFile);
 
                 //QUERY VARIABLE, SET AS ARG
                 String query = arg_query;
@@ -273,27 +278,32 @@ public final class ItemCatalog {
                 	//Update Last Result
                 	LastResult = new ArrayList<CatalogItem>(); 
                 	
-                	//PRINT INPUT QUERY
-                	System.out.println("\n[-- QUERY --]");
-                	System.out.println(query);
-                	
-                	
-                	//PRINT ALL ROWS/SAVE ALL ROWS
-                    System.out.println("\n--- RESULT ---");
-                    util.fieldHeader();
+                	if (printEnabled) 
+                	{
+                    	//PRINT INPUT QUERY
+                    	System.out.println("\n[-- QUERY --]");
+                    	System.out.println(query);
+                    	
+                    	
+                    	//PRINT ALL ROWS/SAVE ALL ROWS
+                        System.out.println("\n--- RESULT ---");
+                        util.fieldHeader();
+                	}
+
                     while (rs.next()) {
-                    	printResult(rs); 
+                    	if (printEnabled) {printResult(rs);}
                     	
                         int ID = rs.getInt("ID");
+                        int Supply = rs.getInt("Supply");
                         double Price = rs.getDouble("Price");
                         String desc = rs.getString("Description");
                         String category = rs.getString("Category");
                         String tags = rs.getString("Tags");
                 		
-                		LastResult.add(new CatalogItem(ID,Price,desc,category,tags));
+                		LastResult.add(new CatalogItem(ID,Supply,Price,desc,category,tags));
                 		
                     	}
-                    
+                    printDisabled();
                     return LastResult;
                 }
             }
@@ -306,5 +316,8 @@ public final class ItemCatalog {
 	}
 
 
+	//---------SETTERS - TOGGLES
+	public static void printEnabled() {printEnabled = true;}
+	public static void printDisabled() {printEnabled = false;}
 
 }
