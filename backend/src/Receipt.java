@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 
 /*
-RECEPT FORMAT --->
+RECEPT FORMAT
+
+
 DESCRIPION
 	amount - item - price
 		x% off -x.yz$
@@ -29,10 +31,14 @@ TOTAL PRICE:
 
 PROVIDED CASH:
 CHANGE: 
-_____________________________
 
-Class is designed to accept an ArrayList and Payment amount, then generate a receipt object
-This class will derive all the information necessary for a receipt based on the list of Cart Items provided
+
+
+
+
+
+first get list of all Sales applied to receipt items
+then
 
 */
 
@@ -44,7 +50,9 @@ public class Receipt {
 	
 	//Payment - Cash Payment provided by Customer
 	private double Payment;
+	//private String PaymentMethod = "Cash";
 	
+	private Payment PaymentMethod = new Payment();
 	
 	//---------GENERATED FIELDS
 	//List of All Sales in ReceiptItems (with no duplicates)
@@ -74,6 +82,8 @@ public class Receipt {
 	//Change if Applicable
 	private double Change;
 	
+	//Save Validity as Variable
+	private boolean purchaseValid = false;
 	
 	//---------CONSTRUCTOR
 	public Receipt(ArrayList<CartItem> source, double payment) 
@@ -84,9 +94,29 @@ public class Receipt {
 		setItemSales();
 		buildDiscounts();
 		setPriceValues();
-		setTransactionValues(payment);
+		setPaymentValues(payment);
 		
-		printReceipt();
+		PaymentMethod.payCash(Total, payment);
+		
+		
+		//printReceipt();
+	}
+	
+	public Receipt(ArrayList<CartItem> source, String paymethod) 
+	{
+		ReceiptItems = source;
+		
+		buildDescription();
+		setItemSales();
+		buildDiscounts();
+		setPriceValues();
+		
+		PaymentMethod.payCredit(Total, paymethod);
+		
+		setPaymentValues((double)PaymentMethod.getAmountPaidCents()/100);
+		
+		
+		//printReceipt();
 	}
 	
 	
@@ -213,13 +243,41 @@ public class Receipt {
 	}
 	
 	//--->SET (CALCULATE) TRANSACTION VALUES
-	private void setTransactionValues(double arg_payment) 
+	//Function public so it can be updated
+	public void setPaymentValues(double arg_payment) 
 	{
-		this.Payment = arg_payment;
-		Change = Payment - Total;
+		purchaseValid = transactionValid(arg_payment);
+		
+		if (purchaseValid) 
+		{
+			this.Payment = arg_payment;
+			Change = Payment - Total;
+		}
+		else
+		{
+			this.Payment = 0;
+			Change = -Total;
+		}
+		
+		
 	}
+
 	
 	//---------GETTERS
+	//---> checks to see if payment is enough to purchase, returns false if it isnt
+	private Boolean transactionValid(double arg_payment) 
+	{
+		if (arg_payment >= Total) {return true;} else {return false;}
+	}
+	
+	//---> GET PAYMENT METHOD
+	public String getPaymentMethod() 
+	{
+		String result = PaymentMethod.getMethodString();
+		return result;
+	}
+	
+	
 	//--->SECTIONS AS FORMATTED STRING LISTS
 	//ITEMS DESCRIPTION SECTION
 	public ArrayList<String> getItemSection()
@@ -234,7 +292,7 @@ public class Receipt {
 			String desc = i.get(1);
 			String price = i.get(2);
 			
-			build.add(String.format("%s. %s: %s$", amnt, desc, price ));
+			build.add(String.format("%s %s: %s$", amnt, desc, price ));
 			
 			//Optional Data
 			String rate = i.get(3);
@@ -284,12 +342,14 @@ public class Receipt {
 		build.add("Savings: " + Total_Savings + "$");
 		build.add("Subtotal: " + subTotal + "$");
 		build.add("Total: " + Total + "$");
-		build.add("CASH: " + Payment + "$");
+		build.add(getPaymentMethod() + ": " + Payment + "$");
 		build.add("CHANGE: " + Change + "$");
 		
 		return build;
 	}
 
+
+	
 	
 	//--->SECTIONS AS DATA FOR DIRECT PULLING
 	//ITEM DESCRIPTION MULTI DIMENSIONAL ARRAY LIST
@@ -299,13 +359,17 @@ public class Receipt {
 	public ArrayList<ArrayList<String>> getDiscountData() {return Discounts;}
 	
 	//PRICING VALUES
+	public Boolean getValid() {return purchaseValid;}
 	public String getTotalTax() {return Double.toString(util.priceFormat(Total_Tax));}
 	public String getTotalSavings() {return Double.toString(util.priceFormat(Total_Savings));}
 	public String getSubTotal() {return Double.toString(util.priceFormat(subTotal));}
 	public String getTotal() {return Double.toString(util.priceFormat(Total));}
 	public String getPayment() {return Double.toString(util.priceFormat(Payment));}
 	public String getChange() {return Double.toString(util.priceFormat(Change));}
-	
+	public String getPaymentMessage() 
+	{
+		return PaymentMethod.getMessage();
+	}
 	
 	//---------PRINTERS
 	public void printReceipt() 
@@ -328,6 +392,24 @@ public class Receipt {
 		for (String i : getPricingSection())
 		{System.out.println(i);}
 		
+	}
+	
+	public static void printReceiptCondensedHead() 
+	{
+		System.out.printf("\nTAX | SAVINGS | SUBTOTAL | CASH | TOTAL | CHANGE");
+	}
+	
+	public void printReceiptCondensed() 
+	{
+		
+		
+		System.out.printf("\n%s | %s | %s | %s | %s | %s", 
+				util.priceFormatString(Total_Tax), 
+				util.priceFormatString(Total_Savings), 
+				util.priceFormatString(subTotal), 
+				util.priceFormatString(Payment), 
+				util.priceFormatString(Total), 
+				util.priceFormatString(Change));
 	}
 	
 }

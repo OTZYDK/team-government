@@ -1,5 +1,3 @@
-
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -11,6 +9,12 @@ public class util {
 	
 	//PRINT ITEM FIELD HEADER
 	//public static void cartHeader() {System.out.println("ID | PRICE | DESCRIPTION | CATEGORY | TAGS");}
+	
+	//PRINT RECEIPT CONDESNED HEAD
+	public static void printReceiptCondensedHead() 
+	{
+		System.out.printf("\nTAX | SAVINGS | SUBTOTAL | CASH | TOTAL | CHANGE");
+	}
 	
 	//PRINT ITEM LIST
 	public static void printItemList(CatalogItem[] arg_items) {
@@ -41,6 +45,11 @@ public class util {
 	    DecimalFormat twoDForm = new DecimalFormat("#.##");
 	    return Double.valueOf(twoDForm.format(d));
 	}
+	
+	public static String priceFormatString(double d) {
+	    return Double.toString(priceFormat(d));
+	}
+	
 	
 	//----------ENUM CLASSES
 	//Category Tag enum

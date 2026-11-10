@@ -130,7 +130,7 @@ public class CartItem{
 	
 	//INCREMENT AMOUNT BY ARGUMENT
 	public void incrementAmount (int increment) {
-		if ((unit_amount += increment) >= 1) {unit_amount += increment;};
+		if ((unit_amount + increment) >= 1) {unit_amount += increment;};
 		setAdjustedPrice();
 	}
 	
@@ -165,7 +165,7 @@ public class CartItem{
 		if (ItemDiscount.isValid())
 		{
 			if (ItemDiscount.DiscountRate > 0)
-			{build.add(Double.toString(ItemDiscount.DiscountRate) + "%");}
+			{build.add(Double.toString(ItemDiscount.DiscountRate) + "%, (-" + util.priceFormat(getPercentOff()  * unit_amount) + "$)" );}
 			else {build.add("");}
 			
 			if (ItemDiscount.DiscountDollar > 0)
@@ -221,6 +221,18 @@ public class CartItem{
 		
 		
 		System.out.println("ADJUSTED PRICE: " + adjusted_price);
+	}
+	
+	public void printFieldLine() {
+		System.out.printf(
+		        "%d | %d | %.2f | %s | %s | %s%n",
+		        item.ID,
+		        unit_amount,
+		        item.Price,
+		        item.Description,
+		        item.Category.toString(),
+		        item.TagstoString()
+		    );
 	}
 	
 	public void printSales()
