@@ -1,6 +1,6 @@
 (function () {
     const STORAGE_KEY = "dallasCollegeBookstoreCart";
-    const API_URL = "http://localhost:8080/api/items";
+    const API_URL = "/api/items";
     const DEMO_TAX_RATE_PERCENT = 2.9;
 
     function readCart() {
