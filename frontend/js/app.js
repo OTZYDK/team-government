@@ -1,7 +1,7 @@
 
  // Dallas College Bookstore App
 
-const API_URL = "/api/items";
+const API_URL = "/api/items"; // switched the API URL from an absolute URL to a relative one
 
 let allItems = [];
 let activeCategory = "";
