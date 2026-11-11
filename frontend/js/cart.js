@@ -1,6 +1,6 @@
 (function () {
     const STORAGE_KEY = "dallasCollegeBookstoreCart";
-    const API_URL = "/api/items"; //switched the API URL from an absolute URL to a relative one
+    const API_URL = "http://localhost:8080/api/items";
    // Temporary demo fallback from the existing CartItem.java prototype.
     // Remove this fallback once the API supplies each item's taxRate/taxExempt fields.
     const DEMO_TAX_RATE_PERCENT = 2.9;
