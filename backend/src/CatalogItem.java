@@ -1,9 +1,9 @@
-
 import java.util.ArrayList;
 
 /*
 ITEM CLASS:
 ID -> Int
+Supply -> Int
 Price -> Double
 Description -> String
 Category -> Category Enumerator
@@ -19,6 +19,8 @@ public class CatalogItem {
 	public final int ID; //FIELD 0
 	public final double Price; //FIELD 1
 	public final String Description; //FIELD 2
+	
+	public int Supply = 1;
 	
 	public final CategoryTag Category; //FIELD 3
 	public final ArrayList<String> ItemTags = new ArrayList<String>(); //FIELD 4
@@ -50,10 +52,11 @@ public class CatalogItem {
 	}
 	
 	//CLASS CONSTRUCTOR - PROVIDE INPUTS
-	public CatalogItem(int arg_ID, double arg_Price, String arg_Description, String arg_Category, String[] arg_Tags) {
+	public CatalogItem(int arg_ID, int supply, double arg_Price, String arg_Description, String arg_Category, String[] arg_Tags) {
 
 		ID = arg_ID;
 		Price = arg_Price;
+		Supply = supply;
 		Description = arg_Description;
 		
 		Category = StringToTag(arg_Category);
@@ -61,9 +64,10 @@ public class CatalogItem {
 	}
 	
 	//TAGS AS ONE LINE
-	public CatalogItem(int arg_ID, double arg_Price, String arg_Description, String arg_Category, String arg_Tags) {
+	public CatalogItem(int arg_ID, int supply, double arg_Price, String arg_Description, String arg_Category, String arg_Tags) {
 
 		ID = arg_ID;
+		Supply = supply;
 		Price = arg_Price;
 		Description = arg_Description;
 		
@@ -82,17 +86,19 @@ public class CatalogItem {
 		//SET ID - FIELD 0
 		this.ID = Integer.parseInt(inputArray[0]);
 		
+		this.Supply = Integer.parseInt(inputArray[1]);
+		
 		//SET PRICE - FIELD 1
-		this.Price = Double.parseDouble(inputArray[1]);
+		this.Price = Double.parseDouble(inputArray[2]);
 		
 		//SET DESCRIPTION - FIELD 2
-		this.Description = inputArray[2];
+		this.Description = inputArray[3];
 		
 		//SET CATEGORY
-		this.Category = StringToTag(inputArray[3]);
+		this.Category = StringToTag(inputArray[4]);
 		
 		//SET TAGS
-        String[] loadTags = inputArray[4].split("-"); 
+        String[] loadTags = inputArray[5].split("-"); 
         fillTagList(loadTags);
 	}
 	
@@ -114,16 +120,19 @@ public class CatalogItem {
 		//SET ID - FIELD 0
 		temp += ID + ",";
 		
-		//SET PRICE - FIELD 1
+		//SET SUPPLY - FIELD 1
+		temp += Supply + ",";
+		
+		//SET PRICE - FIELD 2
 		temp += Price + ",";
 		
-		//SET DESCRIPTION - FIELD 2
+		//SET DESCRIPTION - FIELD 3
 		temp += Description + ",";
 		
-		//SET CATEGORY - FIELD 3
+		//SET CATEGORY - FIELD 4
 		temp += Category.toString() + ",";
 		
-		//SET TAGS - FIELD 4
+		//SET TAGS - FIELD 
 		temp += TagstoString();
 		
 		return temp;
@@ -139,8 +148,9 @@ public class CatalogItem {
 	
 	public void printFields() {
 		System.out.printf(
-		        "%d | %.2f | %s | %s | %s%n",
+		        "%d | %d | %.2f | %s | %s | %s%n",
 		        ID,
+		        Supply,
 		        Price,
 		        Description,
 		        Category.toString(),
@@ -151,6 +161,7 @@ public class CatalogItem {
 	public void printFields(String depreciated) {
 		System.out.println("\nALL DATA FIELDS\n");
 		System.out.println("ID: " + ID);
+		System.out.println("SUPPLY: " + Supply);
 		System.out.println("PRICE: " + Price);
 		System.out.println("DESCRIPTION: " + Description);
 		System.out.println("CATEGORY: " + Category);

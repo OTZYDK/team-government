@@ -1,0 +1,5 @@
+ID,Description,Query,TaxExempt,DiscountRate,DiscountDollarAmount
+1,All books tax free!,SELECT * FROM Items WHERE Category = 'BOOK',TRUE,0.00,0.00
+2,all snacks discounted!,SELECT * FROM Items WHERE Category = 'SNACK',FALSE,15.00,0.00
+3,math sale,SELECT * FROM Items WHERE LOWER(Tags) LIKE '%math%'OR LOWER(Category) LIKE '%math%' AND LOWER(Description) LIKE '%math%',FALSE,0.00,20.00
+4,energy sale,SELECT * FROM Items WHERE LOWER(Tags) LIKE '%caffeine%'OR LOWER(Category) LIKE '%caffeine%' AND LOWER(Description) LIKE '%caffeine%',FALSE,30.00,0.00

@@ -77,12 +77,12 @@ public class BackendTest {
 		I have set the fields to be Final so they cannot be changed after the object is created. This may need to change however
 		*/
 		
-		CatalogItem Item_A = new CatalogItem(50, 200.0, "TI 84 Calculator", "device", new String[]{ "calculator", "mathematics", "calculus", "algrebra", "Texas Instruments"});
+		//CatalogItem Item_A = new CatalogItem(50, 200.0, "TI 84 Calculator", "device", new String[]{ "calculator", "mathematics", "calculus", "algrebra", "Texas Instruments"});
 		CatalogItem Item_B = new CatalogItem("50,200.0,TI 84 Calculator,device,calculator-mathematics-calculus-algrebra-Texas Instruments-");
 		CatalogItem Item_C = new CatalogItem(Item_B.DataToString());
 		
 		System.out.println("\nITEM A - DATA TO FIELD CONSTRUCTOR");
-		Item_A.printFields();
+		//Item_A.printFields();
 		
 		System.out.println("\nITEM B - STRING TO FIELD CONSTRUCTOR");
 		Item_B.printFields();
@@ -120,11 +120,11 @@ public class BackendTest {
 	public void createCartItemTest() {
 		
 		
-		CatalogItem Item_A = new CatalogItem(50, 200.0, "TI 84 Calculator", "device", new String[]{ "calculator", "mathematics", "calculus", "algrebra", "Texas Instruments"});
+		//CatalogItem Item_A = new CatalogItem(50, 200.0, "TI 84 Calculator", "device", new String[]{ "calculator", "mathematics", "calculus", "algrebra", "Texas Instruments"});
 		
 		System.out.println("\nCART ITEM OPTIONAL PARAMTERS TEST");
-		CartItem test = new CartItem(Item_A, 50 + "", false + "", 6 + "");
-		test.printFields();
+		//CartItem test = new CartItem(Item_A, 50 + "", false + "", 6 + "");
+		//test.printFields();
 
 	}
 	
