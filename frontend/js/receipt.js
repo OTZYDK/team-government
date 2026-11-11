@@ -26,9 +26,33 @@
         }).format(value);
     }
 
+    function isTaxExempt(item) {
+            let settings = { categories: {}, items: {} };
+            try {
+                const saved = JSON.parse(localStorage.getItem("dallasCollegeBookstoreTaxExemptions") || "{}");
+                settings = {
+                    categories: saved.categories && typeof saved.categories === "object" ? saved.categories : {},
+                    items: saved.items && typeof saved.items === "object" ? saved.items : {}
+                };
+            } catch (error) {
+                // Fall back to tax details returned by the item API.
+            }
+    
+            const itemId = String(item.id);
+            const category = String(item.category || "").trim().toUpperCase();
+            if (Object.prototype.hasOwnProperty.call(settings.items, itemId)) {
+                return Boolean(settings.items[itemId]);
+            }
+            if (Object.prototype.hasOwnProperty.call(settings.categories, category)) {
+                return Boolean(settings.categories[category]);
+            }
+    
+            const apiValue = item.taxExempt ?? item.tax_exempt;
+            return apiValue === true || String(apiValue).toLowerCase() === "true";
+        }
+
     function getTax(item, lineSubtotal) {
-        const rawTaxExempt = item.taxExempt ?? item.tax_exempt;
-        const taxExempt = rawTaxExempt === true || String(rawTaxExempt).toLowerCase() === "true";
+        const taxExempt = isTaxExempt(item);
         if (taxExempt) return 0;
 
         const rawTaxRate = item.taxRatePercent ?? item.taxRate ?? item.tax_rate;
@@ -67,6 +91,7 @@
             }
 
             let subtotal = 0;
+            let savingsTotal = 0;
             let taxTotal = 0;
             rows.replaceChildren();
 
@@ -81,28 +106,31 @@
                     addCell(row, "Unavailable");
                     addCell(row, "—");
                     addCell(row, "—");
+                    addCell(row, "—");
                     rows.appendChild(row);
                     return;
                 }
 
-                const unitPrice = Number(item.price) || 0;
-                const lineSubtotal = unitPrice * line.quantity;
-                const lineTax = getTax(item, lineSubtotal);
-                subtotal += lineSubtotal;
+                const pricing = window.BookstorePricing.getBreakdown(item, line.quantity);
+                const lineTax = getTax(item, pricing.subtotal);
+                subtotal += pricing.subtotal;
+                savingsTotal += pricing.savings;
                 taxTotal += lineTax;
 
                 addCell(row, item.description || "Store item");
                 addCell(row, String(line.id));
                 addCell(row, String(line.quantity));
-                addCell(row, formatMoney(unitPrice));
+                addCell(row, formatMoney(pricing.unitPrice));
+                addCell(row, pricing.savings > 0 ? "−" + formatMoney(pricing.savings) : "—", "receipt-savings-cell");
                 addCell(row, formatMoney(lineTax));
-                addCell(row, formatMoney(lineSubtotal + lineTax));
+                addCell(row, formatMoney(pricing.discountedSubtotal + lineTax));
                 rows.appendChild(row);
             });
 
             document.getElementById("receipt-subtotal").textContent = formatMoney(subtotal);
+            document.getElementById("receipt-savings").textContent = formatMoney(savingsTotal);
             document.getElementById("receipt-tax").textContent = formatMoney(taxTotal);
-            document.getElementById("receipt-total").textContent = formatMoney(subtotal + taxTotal);
+            document.getElementById("receipt-total").textContent = formatMoney(Math.max(0, subtotal - savingsTotal) + taxTotal);
             content.hidden = false;
             status.textContent = "";
         } catch (error) {

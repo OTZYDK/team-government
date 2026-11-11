@@ -1,8 +1,7 @@
 (function () {
     const STORAGE_KEY = "dallasCollegeBookstoreCart";
     const API_URL = "/api/items";
-   // Temporary demo fallback from the existing CartItem.java prototype.
-    // Remove this fallback once the API supplies each item's taxRate/taxExempt fields.
+    // Matches the current backend's default rate until tax values are returned by the API.
     const DEMO_TAX_RATE_PERCENT = 2.9;
     let temporaryCart = [];
     let catalogItems = [];
@@ -39,6 +38,31 @@
         }
         updateCartCount(cart);
     }
+
+    function isTaxExempt(item) {
+            let settings = { categories: {}, items: {} };
+            try {
+                const saved = JSON.parse(localStorage.getItem("dallasCollegeBookstoreTaxExemptions") || "{}");
+                settings = {
+                    categories: saved.categories && typeof saved.categories === "object" ? saved.categories : {},
+                    items: saved.items && typeof saved.items === "object" ? saved.items : {}
+                };
+            } catch (error) {
+                // Fall back to tax details returned by the item API.
+            }
+    
+            const itemId = String(item.id);
+            const category = String(item.category || "").trim().toUpperCase();
+            if (Object.prototype.hasOwnProperty.call(settings.items, itemId)) {
+                return Boolean(settings.items[itemId]);
+            }
+            if (Object.prototype.hasOwnProperty.call(settings.categories, category)) {
+                return Boolean(settings.categories[category]);
+            }
+    
+            const apiValue = item.taxExempt ?? item.tax_exempt;
+            return apiValue === true || String(apiValue).toLowerCase() === "true";
+        }
 
     function addItem(itemId) {
         const id = Number(itemId);
@@ -101,6 +125,7 @@
         const cart = readCart();
         const itemById = new Map(items.map(item => [Number(item.id), item]));
         let subtotal = 0;
+        let savingsTotal = 0;
         let taxTotal = 0;
         container.replaceChildren();
 
@@ -126,13 +151,41 @@
 
             const price = document.createElement("p");
             price.className = "cart-line-price";
+            let discountedLineSubtotal = 0;
             if (item) {
-                const unitPrice = Number(item.price) || 0;
-                subtotal += unitPrice * line.quantity;
-                price.textContent = formatMoney(unitPrice) + " each";
+                const pricing = window.BookstorePricing.getBreakdown(item, line.quantity);
+                subtotal += pricing.subtotal;
+                savingsTotal += pricing.savings;
+                discountedLineSubtotal = pricing.discountedSubtotal;
+
+                if (pricing.hasBundleOffer) {
+                    const bundleNote = document.createElement("p");
+                    bundleNote.className = "multi-buy-note";
+                    bundleNote.textContent = pricing.bundleApplied
+                        ? `${pricing.bundleQuantity} for ${formatMoney(pricing.bundlePrice)} applied` +
+                          (pricing.bundleLeftoverCount > 0
+                              ? `; ${pricing.bundleLeftoverCount} at regular price`
+                              : "")
+                        : `Add ${pricing.bundleQuantity} for ${formatMoney(pricing.bundlePrice)}`;
+                    details.appendChild(bundleNote);
+                }
+
+                if (pricing.savings > 0) {
+                    const originalPrice = document.createElement("span");
+                    originalPrice.className = "original-price";
+                    originalPrice.textContent = formatMoney(pricing.unitPrice) + " each";
+
+                    const salePrice = document.createElement("strong");
+                    salePrice.className = "sale-price";
+                    salePrice.textContent = formatMoney(pricing.discountedUnitPrice) + " each";
+                    price.append(originalPrice, salePrice);
+                } else {
+                    price.textContent = formatMoney(pricing.unitPrice) + " each";
+                }
+
+                const unitPrice = pricing.unitPrice;
                 
-                const rawTaxExempt = item.taxExempt ?? item.tax_exempt;
-                const taxExempt = rawTaxExempt === true || String(rawTaxExempt).toLowerCase() === "true";
+                const taxExempt = isTaxExempt(item);
                 const rawTaxRate = item.taxRatePercent ?? item.taxRate ?? item.tax_rate;
                 const parsedTaxRate = Number(rawTaxRate);
                 const hasItemTaxRate = rawTaxRate !== undefined
@@ -173,7 +226,7 @@
             const lineTotal = document.createElement("strong");
             lineTotal.className = "cart-line-total";
             lineTotal.textContent = item
-                ? formatMoney((Number(item.price) || 0) * line.quantity)
+                ? formatMoney(discountedLineSubtotal)
                 : "";
 
             row.append(details, price, controls, lineTotal, remove);
@@ -181,11 +234,13 @@
         });
 
         const subtotalElement = document.getElementById("cart-subtotal");
+        const savingsElement = document.getElementById("cart-savings");
         const totalElement = document.getElementById("cart-total");
         const taxElement = document.getElementById("cart-tax");
         if (subtotalElement) subtotalElement.textContent = formatMoney(subtotal);
+        if (savingsElement) savingsElement.textContent = formatMoney(savingsTotal);
         if (taxElement) taxElement.textContent = formatMoney(taxTotal);
-        if (totalElement) totalElement.textContent = formatMoney(subtotal + taxTotal);
+        if (totalElement) totalElement.textContent = formatMoney(Math.max(0, subtotal - savingsTotal) + taxTotal);
         updateCartCount(cart);
     }
 
