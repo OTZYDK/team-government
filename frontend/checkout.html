@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Dallas College Bookstore</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dallas College Bookstore</h1>
+        <p>Your campus finds, all in one place.</p>
+    </header>
+
+    <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="index.html#books">Shop</a>
+        <a href="cart.html">Cart <span class="cart-count" data-cart-count>0</span></a>
+        <a href="receipt.html">Receipt</a>
+        <a href="login.html">Manager</a>
+    </nav>
+
+    <main class="checkout-main">
+        <ol class="checkout-steps" aria-label="Checkout steps">
+            <li class="checkout-step-done"><span>1</span> Cart</li>
+            <li class="checkout-step-current" aria-current="step"><span>2</span> Payment</li>
+            <li><span>3</span> Receipt</li>
+        </ol>
+
+        <div class="checkout-layout">
+            <section class="checkout-panel" aria-labelledby="checkout-heading">
+                <div class="checkout-heading">
+                    <p class="welcome-kicker">ALMOST THERE</p>
+                    <h2 id="checkout-heading">Choose how to pay</h2>
+                    <p>Select a payment method for your order.</p>
+                </div>
+
+                <form id="checkout-form">
+                    <section class="student-discount-panel" aria-labelledby="student-discount-heading">
+                        <div>
+                            <h3 id="student-discount-heading">Student discount</h3>
+                            <p>Scan or enter your student ID to check for eligible savings.</p>
+                        </div>
+                        <label class="visually-hidden" for="student-id">Student ID</label>
+                        <div class="student-id-controls">
+                            <input id="student-id" name="studentId" type="text" inputmode="numeric" autocomplete="off" placeholder="Scan or enter student ID">
+                            <button id="apply-student-discount" type="button" class="secondary-action">Apply ID</button>
+                        </div>
+                        <p id="student-discount-feedback" class="student-discount-feedback" role="status" aria-live="polite"></p>
+                    </section>
+
+                    <fieldset class="payment-methods">
+                        <legend>Payment method</legend>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="cash" checked>
+                            <span class="payment-option-icon" aria-hidden="true">$</span>
+                            <span class="payment-option-copy"><strong>Cash</strong><small>Pay when you pick up</small></span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="card">
+                            <span class="payment-option-icon card-icon" aria-hidden="true">▰</span>
+                            <span class="payment-option-copy"><strong>Credit card</strong><small>Visa card for class demo</small></span>
+                        </label>
+                    </fieldset>
+
+                    <div id="cash-fields" class="payment-fields">
+                        <label for="cash-received">Cash received</label>
+                        <div class="money-input">
+                            <span aria-hidden="true">$</span>
+                            <input id="cash-received" name="cashReceived" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00">
+                        </div>
+                        <p class="field-help">Enter the amount you plan to pay with.</p>
+                        <p id="cash-change-preview" class="cash-change-preview" role="status" aria-live="polite">Enter cash received to calculate change.</p>
+                    </div>
+
+                    <div id="card-fields" class="payment-fields" hidden>
+                        <label for="card-name">Name on card</label>
+                        <input id="card-name" name="cardName" type="text" autocomplete="cc-name" placeholder="Name as it appears on the card" disabled>
+
+                        <label for="card-number">Card number</label>
+                        <input id="card-number" name="cardNumber" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="4••• •••• •••• ••••" maxlength="23" disabled>
+
+                        <div class="card-detail-row">
+                            <div>
+                                <label for="card-expiry">Expiration</label>
+                                <input id="card-expiry" name="cardExpiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" disabled>
+                            </div>
+                            <div>
+                                <label for="card-security">Security code</label>
+                                <input id="card-security" name="cardSecurity" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="•••" maxlength="4" disabled>
+                            </div>
+                        </div>
+                        <p class="field-help">For this class demo, the card number must start with 4 and contain 16 digits.</p>
+                    </div>
+
+                    <p id="checkout-feedback" class="checkout-feedback" role="status" aria-live="polite"></p>
+                    <button id="place-order" class="place-order-button" type="submit">Place order</button>
+                    <p class="checkout-footnote">Your cart stays saved until checkout is connected.</p>
+                </form>
+            </section>
+
+            <aside class="checkout-summary-card" aria-labelledby="order-summary-heading">
+                <h2 id="order-summary-heading">Your order</h2>
+                <div id="checkout-items" class="checkout-items" aria-live="polite">
+                    <p>Loading your items…</p>
+                </div>
+                <div class="checkout-totals">
+                    <p><span>Subtotal</span><strong id="checkout-subtotal">$0.00</strong></p>
+                    <p class="checkout-savings-row"><span>Discount savings</span><strong id="checkout-savings">$0.00</strong></p>
+                    <p><span>Estimated tax</span><strong id="checkout-tax">$0.00</strong></p>
+                    <p class="checkout-grand-total"><span>Total</span><strong id="checkout-total">$0.00</strong></p>
+                </div>
+                <a class="back-to-cart" href="cart.html">← Back to cart</a>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Dallas College Bookstore</p>
+    </footer>
+
+    <script src="js/pricing.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
