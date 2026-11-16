@@ -3,77 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Dallas College Bookstore</title>
-
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-    <!-- Header -->
-    <header>
-        <h1>Dallas College Bookstore</h1>
-        <p>Your one-stop shop for books, supplies, and college merchandise.</p>
-    </header>
+<header>
+    <h1>Dallas College Bookstore</h1>
+    <p>Your one-stop shop for books, supplies, and college merchandise.</p>
+</header>
 
-    <!-- Main Navigation -->
-    <nav aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="#books">Books</a>
-        <a href="#supplies">Supplies</a>
-        <a href="#cart">Cart</a>
-        <a href="#receipt">Receipt</a>
-    </nav>
+<nav aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="#books">Products</a>
+    <a href="#supplies">Supplies</a>
+    <a href="#cart">Cart</a>
+    <a href="#receipt">Receipt</a>
+    <a href="#sales-history">Sales History</a>
+    <a href="#manager">Manager</a>
+</nav>
 
-    <main>
+<main>
 
-        <!-- Welcome Section -->
-        <section class="welcome">
-            <h2>Welcome to the Dallas College Bookstore</h2>
-            <p>
-                Find the textbooks, school supplies, and college
-                merchandise you need for your classes.
-            </p>
-        </section>
+    <!-- Welcome -->
+    <section class="welcome">
+        <h2>Welcome to the Dallas College Bookstore</h2>
+        <p>
+            Find the textbooks, school supplies, and college merchandise
+            you need for your classes.
+        </p>
+    </section>
 
-        <!-- Search and Category Navigation -->
-        <section class="search-section">
-            <h2>Find Your Products</h2>
+    <!-- Product Search -->
+    <section id="product-search" class="welcome">
+        <h2>Find Your Products</h2>
 
-            <form class="search-form" action="#" method="get">
-                <input
-                    type="search"
-                    name="search"
-                    placeholder="Search books, devices, stationery..."
-                    aria-label="Search products"
-                >
-                <button type="submit">Search</button>
-            </form>
+        <form id="search-form" class="search-form">
+            <label for="search-input">Search by product name</label>
+            <input
+                type="search"
+                id="search-input"
+                name="search"
+                placeholder="Example: Calculus textbook"
+                aria-label="Search products by name"
+            >
+            <button type="submit">Search</button>
+            <button type="reset" id="clear-search">Clear Search</button>
+        </form>
+    </section>
 
-            <div class="category-section">
-                <h3>Shop by Category</h3>
+    <!-- Browse Categories -->
+    <section id="browse-categories" class="welcome">
+        <h2>Browse Items by Category</h2>
+        <p>Select a category to find the products you need.</p>
 
-                <nav class="category-links" aria-label="Product categories">
-                    <a href="#books">BOOK</a>
-                    <a href="#device">DEVICE</a>
-                    <a href="#tool">TOOL</a>
-                    <a href="#snack">SNACK</a>
-                    <a href="#drink">DRINK</a>
-                    <a href="#stationery">STATIONERY</a>
-                    <a href="#apparel">APPAREL</a>
-                    <a href="#error">ERROR</a>
-                </nav>
-            </div>
+        <div class="category-links">
+            <a href="#books">BOOK</a>
+            <a href="#device">DEVICE</a>
+            <a href="#tool">TOOL</a>
+            <a href="#snack">SNACK</a>
+            <a href="#drink">DRINK</a>
+            <a href="#stationery">STATIONERY</a>
+            <a href="#apparel">APPAREL</a>
+            <a href="#error">ERROR</a>
+        </div>
 
-            <div class="category-section">
-                <h3>Shop by Tags</h3>
+        <form id="category-filter-form">
+            <label for="category-filter">Choose a product category</label>
+            <select id="category-filter" name="category">
+                <option value="">All Categories</option>
+                <option value="BOOK">Books</option>
+                <option value="DEVICE">Devices</option>
+                <option value="TOOL">Tools</option>
+                <option value="SNACK">Snacks</option>
+                <option value="DRINK">Drinks</option>
+                <option value="STATIONERY">Stationery</option>
+                <option value="APPAREL">Apparel</option>
+                <option value="ERROR">Other</option>
+            </select>
+            <button type="submit">Browse Category</button>
+        </form>
+    </section>
 
-                <nav class="category-links" aria-label="Product tags">
-                    <a href="#exam-supplies">Exam Supplies</a>
-                    <a href="#art-supplies">Art Supplies</a>
-                    <a href="#course-supplies">Course Supplies</a>
-                </nav>
+    <!-- Featured Products -->
+    <section id="books">
+        <h2>Featured Products</h2>
+
+        <!-- Preserve existing app.js connection -->
+        <div id="store-container" class="products">
+            <p>Loading items...</p>
+        </div>
+    </section>
+
+    <!-- Additional Category Anchors -->
+    <section id="device" class="category-anchor">
+        <h2>Devices</h2>
+        <p>Browse educational and technology devices.</p>
+    </section>
+
+    <section id="tool" class="category-anchor">
+        <h2>Tools</h2>
+        <p>Browse tools and learning equipment.</p>
+    </section>
+
+    <section id="snack" class="category-anchor">
+        <h2>Snacks</h2>
+        <p>Browse available bookstore snacks.</p>
+    </section>
+
+    <section id="drink" class="category-anchor">
+        <h2>Drinks</h2>
+        <p>Browse available drinks.</p>
+    </section>
+
+    <section id="stationery" class="category-anchor">
+        <h2>Stationery</h2>
+        <p>Browse notebooks, pencils, pens, and exam supplies.</p>
+    </section>
+
+    <section id="apparel" class="category-anchor">
+        <h2>Apparel</h2>
+        <p>Browse Dallas College merchandise and clothing.</p>
+    </section>
+
+    <section id="error" class="category-anchor">
+        <h2>Other Items</h2>
+        <p>Browse other bookstore products.</p>
+    </section>
+
+    <!-- School Supplies -->
+    <section id="supplies" class="welcome">
+        <h2>School Supplies</h2>
+        <p>
+            Shop notebooks, calculators, pens, backpacks,
+            and other supplies for your classes.
+        </p>
+    </section>
+
+    <!-- Shopping Cart -->
+    <section id="cart" class="welcome">
+        <h2>Shopping Cart</h2>
+        <p>Review your items before completing your purchase.</p>
+
+        <div class="cart-content">
+            <p>Your shopping cart items will appear here.</p>
+        </div>
+
+        <div class="cart-actions">
+            <button type="button" id="view-cart">View Cart</button>
+            <button type="button" id="cancel-transaction"
+                    class="cancel-button">
+                Cancel Entire Transaction
+            </button>
+        </div>
+
+        <details class="cancel-confirmation">
+            <summary>Confirm Transaction Cancellation</summary>
+
+            <div class="confirmation-content">
+                <h3>Are you sure?</h3>
+                <p>
+                    Canceling will remove all items from your
+                    shopping cart after you confirm.
+                </p>
+
+                <button type="button" id="confirm-cancel">
+                    Yes, Cancel My Transaction
+                </button>
+
+                <button type="button" id="keep-shopping">
+                    No, Keep Shopping
+                </button>
             </div>
         </details>
 
@@ -86,8 +187,9 @@
 
         <div class="receipt-heading">
             <h3>Dallas College Bookstore</h3>
-            <p><strong>Receipt No.:</strong> DC-1001</p>
+            <p><strong>Receipt No.:</strong> <span id="receipt-number">Generated at checkout</span></p>
             <p><strong>Customer:</strong> Student</p>
+            <p><strong>Date:</strong> <span id="receipt-date">Generated at checkout</span></p>
         </div>
 
         <div class="receipt-table-wrapper">
@@ -103,33 +205,30 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="receipt-items">
                     <tr>
                         <td colspan="6">
-                            Your actual purchased items will appear here
-                            when connected to the cart.
+                            Your purchased items will appear here after checkout.
                         </td>
                     </tr>
                 </tbody>
 
-        <!-- Featured Products -->
-        <!-- Keep this ID for the existing app.js -->
                 <tfoot>
                     <tr>
                         <td colspan="5">Subtotal</td>
-                        <td>Calculated at checkout</td>
+                        <td id="receipt-subtotal">—</td>
                     </tr>
                     <tr>
                         <td colspan="5">Tax</td>
-                        <td>Calculated at checkout</td>
+                        <td id="receipt-tax">—</td>
                     </tr>
                     <tr>
                         <td colspan="5">Discount</td>
-                        <td>Calculated at checkout</td>
+                        <td id="receipt-discount">—</td>
                     </tr>
                     <tr>
                         <td colspan="5"><strong>Total</strong></td>
-                        <td><strong>Calculated at checkout</strong></td>
+                        <td id="receipt-total"><strong>—</strong></td>
                     </tr>
                 </tfoot>
             </table>
@@ -145,12 +244,60 @@
         </button>
     </section>
 
+    <!-- Sprint 4: Completed Sales History -->
+    <section id="sales-history" class="welcome">
+        <h2>Completed Sales History</h2>
+
+        <p>
+            View records of completed bookstore transactions.
+            Every successful sale should be saved by the system.
+        </p>
+
+        <div class="sales-summary">
+            <div class="sales-summary-card">
+                <h3>Total Completed Sales</h3>
+                <p id="total-sales">0</p>
+            </div>
+
+            <div class="sales-summary-card">
+                <h3>Total Sales Revenue</h3>
+                <p id="total-revenue">$0.00</p>
+            </div>
+        </div>
+
+        <div class="receipt-table-wrapper">
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date and Time</th>
+                        <th>Items Purchased</th>
+                        <th>Subtotal</th>
+                        <th>Tax</th>
+                        <th>Discount</th>
+                        <th>Total Paid</th>
+                        <th>Payment Method</th>
+                    </tr>
+                </thead>
+
+                <tbody id="sales-history-body">
+                    <tr>
+                        <td colspan="8">
+                            No completed sales records available.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p id="sales-history-message" aria-live="polite"></p>
+    </section>
+
     <!-- Manager Catalog -->
     <section id="manager" class="welcome">
         <h2>Manager Catalog</h2>
         <p>Add, edit, or remove bookstore items.</p>
 
-        <!-- Preserve existing form and field IDs -->
         <form id="item-form">
             <label for="item-id">Item ID</label>
             <input type="number" id="item-id"
@@ -164,246 +311,197 @@
             <input type="text" id="item-description"
                    placeholder="Product description" required>
 
-        <!-- Featured Products -->
-        <section id="books">
-            <h2>Featured Products</h2>
+            <label for="item-category">Category</label>
+            <select id="item-category" required>
+                <option value="">Select Category</option>
+                <option value="BOOK">Book</option>
+                <option value="DEVICE">Device</option>
+                <option value="TOOL">Tool</option>
+                <option value="SNACK">Snack</option>
+                <option value="DRINK">Drink</option>
+                <option value="STATIONERY">Stationery</option>
+                <option value="APPAREL">Apparel</option>
+                <option value="ERROR">Other</option>
+            </select>
 
-            <div id="store-container" class="products">
-                <p>Loading items...</p>
+            <label for="item-tags">Tags</label>
+            <input type="text" id="item-tags" placeholder="Product tags">
+
+            <div class="manager-buttons">
+                <button type="submit">Add Item</button>
+                <button type="button" id="update-item">Update Item</button>
+                <button type="button" id="delete-item">Delete Item</button>
             </div>
-        </section>
+        </form>
+    </section>
 
-        <!-- Manager Catalog -->
-        <section id="manager" class="welcome">
-            <h2>Manager Catalog</h2>
-            <p>Add, edit, or remove bookstore items.</p>
+    <!-- Product Tax Settings -->
+    <section id="tax-settings" class="welcome">
+        <h2>Product Tax Settings</h2>
+        <p>Set the tax treatment for each bookstore product.</p>
 
-            <form id="item-form">
+        <form id="tax-settings-form">
+            <label for="tax-item-id">Product ID</label>
+            <input type="number" id="tax-item-id"
+                   name="itemId" placeholder="Enter product ID">
 
-                <label for="item-id">Item ID</label>
-                <input
-                    type="number"
-                    id="item-id"
-                    placeholder="Item ID"
-                    required
-                >
+            <label for="tax-rate">Tax Rate (%)</label>
+            <input type="number" id="tax-rate"
+                   name="taxRate" min="0" max="100"
+                   step="0.001" placeholder="Enter applicable tax rate">
 
-                <label for="item-price">Price</label>
-                <input
-                    type="number"
-                    id="item-price"
-                    placeholder="Price"
-                    min="0"
-                    step="0.01"
-                    required
-                >
+            <label class="inline-option">
+                <input type="checkbox" id="item-tax-exempt"
+                       name="taxExempt">
+                Mark this product as tax exempt
+            </label>
 
-                <label for="item-description">Description</label>
-                <input
-                    type="text"
-                    id="item-description"
-                    placeholder="Description"
-                    required
-                >
+            <button type="submit">Save Product Tax Settings</button>
+        </form>
 
-                <label for="item-category">Category</label>
-                <select id="item-category" required>
-                    <option value="">Select Category</option>
-                    <option value="BOOK">Book</option>
-                    <option value="DEVICE">Device</option>
-                    <option value="TOOL">Tool</option>
-                    <option value="SNACK">Snack</option>
-                    <option value="DRINK">Drink</option>
-                    <option value="STATIONERY">Stationery</option>
-                    <option value="APPAREL">Apparel</option>
-                    <option value="ERROR">Error</option>
-                </select>
+        <h3>Category Tax Settings</h3>
 
-                <label for="item-tags">Tags</label>
-                <input
-                    type="text"
-                    id="item-tags"
-                    placeholder="Tags"
-                >
+        <form id="category-tax-form">
+            <label for="tax-category">Select Category</label>
+            <select id="tax-category" name="category">
+                <option value="">Select Category</option>
+                <option value="BOOK">Book</option>
+                <option value="DEVICE">Device</option>
+                <option value="TOOL">Tool</option>
+                <option value="SNACK">Snack</option>
+                <option value="DRINK">Drink</option>
+                <option value="STATIONERY">Stationery</option>
+                <option value="APPAREL">Apparel</option>
+            </select>
 
-                <div class="manager-buttons">
-                    <button type="submit">Add Item</button>
-                    <button type="button" id="update-item">Update Item</button>
-                    <button type="button" id="delete-item">Delete Item</button>
-                </div>
+            <label class="inline-option">
+                <input type="checkbox" id="category-tax-exempt"
+                       name="taxExempt">
+                Mark this entire category as tax exempt
+            </label>
 
-            </form>
-        </section>
+            <button type="submit">Save Category Tax Settings</button>
+        </form>
 
-        <!-- School Supplies -->
-        <section id="supplies" class="welcome">
-            <h2>School Supplies</h2>
+        <p class="form-note">
+            Tax rates and exemptions must follow applicable
+            sales-tax rules. Confirm settings before checkout.
+        </p>
+    </section>
 
-            <p>
-                Shop notebooks, calculators, pens, backpacks,
-                and other supplies for your classes.
-            </p>
-        </section>
+    <!-- Discount Management -->
+    <section id="discount-management" class="welcome">
+        <h2>Discount Management</h2>
+        <p>Create discounts for selected bookstore categories.</p>
 
-        <!-- Shopping Cart -->
-        <section id="cart" class="welcome">
-            <h2>Shopping Cart</h2>
-            <p>Your cart is currently empty.</p>
-            <button type="button">View Cart</button>
-        </section>
+        <form id="discount-form">
 
-        <!-- Itemized Receipt -->
-        <section id="receipt" class="welcome">
+            <label for="discount-name">Discount Name</label>
+            <input type="text" id="discount-name"
+                   name="discountName"
+                   placeholder="Example: Back to School Sale" required>
 
-            <h2>Itemized Receipt</h2>
+            <label for="discount-type">Discount Type</label>
+            <select id="discount-type" name="discountType" required>
+                <option value="">Choose Discount Type</option>
+                <option value="PERCENT">Percentage Off (%)</option>
+                <option value="DOLLAR">Dollar Amount Off ($)</option>
+            </select>
 
-            <div class="receipt-heading">
-                <h3>Dallas College Bookstore</h3>
+            <label for="discount-value">Discount Value</label>
+            <input type="number" id="discount-value"
+                   name="discountValue" min="0"
+                   step="0.01" placeholder="Enter discount amount" required>
 
-                <p><strong>Receipt No.:</strong> DC-1001</p>
-                <p><strong>Date:</strong> November 5, 2026</p>
-                <p><strong>Customer:</strong> Student</p>
-            </div>
+            <fieldset>
+                <legend>Categories That Qualify for This Discount</legend>
 
-            <div class="receipt-table-wrapper">
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="BOOK"> Books
+                </label>
 
-                <table class="receipt-table">
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="DEVICE"> Devices
+                </label>
 
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Qty.</th>
-                            <th>Unit Price</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="TOOL"> Tools
+                </label>
 
-                    <tbody>
-                        <tr>
-                            <td>Beginners Guide to Integral Calculus</td>
-                            <td>1</td>
-                            <td>$45.99</td>
-                            <td>$45.99</td>
-                        </tr>
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="SNACK"> Snacks
+                </label>
 
-                        <tr>
-                            <td>Mechanical Pencils</td>
-                            <td>2</td>
-                            <td>$12.99</td>
-                            <td>$25.98</td>
-                        </tr>
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="DRINK"> Drinks
+                </label>
 
-                        <tr>
-                            <td>Composition Notebook</td>
-                            <td>1</td>
-                            <td>$5.99</td>
-                            <td>$5.99</td>
-                        </tr>
-                    </tbody>
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="STATIONERY"> Stationery
+                </label>
 
-                    <tfoot>
-                        <tr>
-                            <td colspan="3">Subtotal</td>
-                            <td>$77.96</td>
-                        </tr>
+                <label class="inline-option">
+                    <input type="checkbox" name="discountCategories"
+                           value="APPAREL"> Apparel
+                </label>
+            </fieldset>
 
-                        <tr>
-                            <td colspan="3">Sample Tax (8.25%)</td>
-                            <td>$6.43</td>
-                        </tr>
+            <label for="discount-start">Start Date</label>
+            <input type="date" id="discount-start" name="startDate">
 
-                        <tr>
-                            <td colspan="3"><strong>Total</strong></td>
-                            <td><strong>$84.39</strong></td>
-                        </tr>
-                    </tfoot>
+            <label for="discount-end">End Date</label>
+            <input type="date" id="discount-end" name="endDate">
 
-                </table>
+            <button type="submit">Create Discount</button>
+        </form>
+    </section>
 
-            </div>
+    <!-- Additional Product Form -->
+    <section id="manager-add-product" class="welcome">
+        <h2>Add a Bookstore Product</h2>
+        <p>Use this form to add a new bookstore product.</p>
 
-            <p class="receipt-thanks">
-                Thank you for shopping at Dallas College Bookstore!
-            </p>
+        <form id="addItemForm">
+            <label for="product-id">ID</label>
+            <input type="number" id="product-id" name="id"
+                   placeholder="Enter product ID">
 
-            <button
-                type="button"
-                class="print-button"
-                onclick="window.print()"
-            >
-                Print Receipt
-            </button>
+            <label for="product-price">Price</label>
+            <input type="number" id="product-price" name="price"
+                   placeholder="Enter price" min="0" step="0.01">
 
-        </section>
+            <label for="product-description">Description</label>
+            <input type="text" id="product-description"
+                   name="description" placeholder="Product description">
 
-        <!-- Add a Bookstore Product -->
-        <section id="manager-add-product" class="welcome">
+            <label for="product-category">Category</label>
+            <input type="text" id="product-category"
+                   name="category" placeholder="Example: BOOK">
 
-            <h2>Add a Bookstore Product</h2>
+            <label for="product-tags">Tags</label>
+            <input type="text" id="product-tags"
+                   name="tags" placeholder="Example: exam supplies">
 
-            <p>Use this form to add a new bookstore product.</p>
+            <button type="submit">Add Product</button>
+        </form>
 
-            <form id="addItemForm">
+        <div id="form-message" aria-live="polite"></div>
+    </section>
 
-                <label for="product-id">ID:</label>
-                <input
-                    type="number"
-                    id="product-id"
-                    name="id"
-                    placeholder="Enter product ID"
-                >
+</main>
 
-                <label for="product-price">Price:</label>
-                <input
-                    type="number"
-                    id="product-price"
-                    name="price"
-                    placeholder="Enter price"
-                    min="0"
-                    step="0.01"
-                >
+<footer>
+    <p>&copy; 2026 Dallas College Bookstore</p>
+</footer>
 
-                <label for="product-description">Description:</label>
-                <input
-                    type="text"
-                    id="product-description"
-                    name="description"
-                    placeholder="Enter product description"
-                >
-
-                <label for="product-category">Category:</label>
-                <input
-                    type="text"
-                    id="product-category"
-                    name="category"
-                    placeholder="Example: BOOK or DEVICE"
-                >
-
-                <label for="product-tags">Tags:</label>
-                <input
-                    type="text"
-                    id="product-tags"
-                    name="tags"
-                    placeholder="Example: exam supplies, course supplies"
-                >
-
-                <button type="submit">Add Product</button>
-
-            </form>
-
-            <div id="form-message"></div>
-
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Dallas College Bookstore</p>
-    </footer>
-
-    <!-- Existing JavaScript Integration -->
-    <script src="js/app.js"></script>
+<!-- Keep your existing JavaScript file -->
+<script src="js/app.js"></script>
 
 </body>
 </html>
