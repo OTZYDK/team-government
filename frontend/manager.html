@@ -115,11 +115,74 @@
         </div>
     </section>
 
+    <section class="tax-settings-card" aria-labelledby="tax-settings-heading">
+        <div class="catalog-heading">
+            <h2 id="tax-settings-heading">Tax exemptions</h2>
+            <p>Turn an exemption on or off for a category. Individual item settings below take priority.</p>
+        </div>
+        <div class="category-tax-control">
+            <label for="tax-category">Category</label>
+            <select id="tax-category">
+                <option value="BOOK">Books</option>
+                <option value="DEVICE">Devices</option>
+                <option value="TOOL">Tools</option>
+                <option value="SNACK">Snacks</option>
+                <option value="DRINK">Drinks</option>
+                <option value="STATIONERY">Stationery</option>
+                <option value="APPAREL">Apparel</option>
+            </select>
+            <label class="tax-toggle category-tax-toggle" for="category-tax-exempt">
+                <input id="category-tax-exempt" type="checkbox">
+                <span class="tax-toggle-track" aria-hidden="true"></span>
+                <span class="tax-toggle-label">Tax-exempt category</span>
+            </label>
+        </div>
+        <p id="tax-exemption-feedback" class="tax-exemption-feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="inventory-levels-section" aria-labelledby="inventory-levels-heading">
+        <div class="inventory-levels-heading">
+            <div>
+                <h2 id="inventory-levels-heading">Current inventory</h2>
+                <p>View stock for every product and narrow the list by category.</p>
+            </div>
+            <div class="inventory-filter">
+                <label for="inventory-category-filter">Filter by category</label>
+                <select id="inventory-category-filter">
+                    <option value="">All categories</option>
+                    <option value="BOOK">Books</option>
+                    <option value="DEVICE">Devices</option>
+                    <option value="TOOL">Tools</option>
+                    <option value="SNACK">Snacks</option>
+                    <option value="DRINK">Drinks</option>
+                    <option value="STATIONERY">Stationery</option>
+                    <option value="APPAREL">Apparel</option>
+                </select>
+            </div>
+        </div>
+        <p id="inventory-item-count" class="inventory-item-count" role="status" aria-live="polite">Loading inventory…</p>
+        <div class="inventory-table-wrapper">
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Item code</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Available</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-table-body">
+                    <tr><td colspan="4">Loading inventory…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <section id="books" class="catalog-section">
 
         <div class="catalog-heading">
             <h2>Product Catalog</h2>
-            <p>Browse the items in your bookstore.</p>
+            <p>Browse items and change tax-exempt status for individual products.</p>
         </div>
 
         <div id="store-container" class="products">
@@ -133,6 +196,7 @@
     <p>&copy; 2026 Dallas College Bookstore</p>
 </footer>
 
+<script src="js/pricing.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/app.js"></script>
 
