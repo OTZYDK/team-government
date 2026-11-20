@@ -289,6 +289,28 @@
     document.addEventListener("DOMContentLoaded", () => {
         updateCartCount(readCart());
         loadCartPage();
+         const cancelButton = document.getElementById("cancel-transaction");
+    if (cancelButton) {
+        cancelButton.addEventListener("click", () => {
+            if (!confirm("Are you sure you want to cancel this transaction? Your cart will be emptied.")) {
+                return;
+            }
+
+            // Clear the cart from localStorage
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch (error) {
+                // localStorage may be disabled; fall back to clearing the in-memory cart
+            }
+
+            // Also reset the in-memory cart
+            temporaryCart = [];
+            updateCartCount([]);
+
+            // Redirect back to the storefront
+            window.location.href = "index.html#books";
+        });
+    }
     });
 
     window.BookstoreCart = { addItem };

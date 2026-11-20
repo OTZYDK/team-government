@@ -630,6 +630,31 @@ footer {
     margin: 10px 0;
 }
 
+/* Cancel transaction button */
+.cancel-transaction-button {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border: 1px solid #e4c3c1;
+    border-radius: 9px;
+    background: #fff;
+    color: #9c3934;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.cancel-transaction-button:hover {
+    background: #fdf1f0;
+}
+
+.cancel-transaction-button:focus-visible {
+    outline: 3px solid #e4a8a5;
+    outline-offset: 2px;
+}
+
 
 .cart-total-row {
     padding-top: 12px;
