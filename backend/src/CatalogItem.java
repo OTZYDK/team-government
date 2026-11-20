@@ -103,7 +103,25 @@ public class CatalogItem {
 	}
 	
 	//GETTERS
-	public String getCategory() {return Category.toString();}
+	public int getID() {
+		return ID;
+	}
+
+	public int getSupply() {
+		return Supply;
+	}
+
+	public void setSupply(int supply) {
+		if (supply < 0) {
+			throw new IllegalArgumentException("Supply cannot be negative.");
+		}
+
+		this.Supply = supply;
+	}
+
+	public String getCategory() {
+		return Category.toString();
+	}
 	
 	//CONVERSIONS
 	public String TagstoString() {

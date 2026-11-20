@@ -114,4 +114,50 @@ public class CsvHandler {
             e.printStackTrace();
         }
     }
+
+    public static List<ApparelAttribute> LoadApparelAttributes(String file) {
+
+        List<ApparelAttribute> attributes = new ArrayList<>();
+
+        ArrayList<String> lines = LoadFile(file);
+
+        if (lines == null) {
+            return attributes;
+        }
+
+        for (int i = 1; i < lines.size(); i++) {
+
+            String line = lines.get(i).trim();
+
+            if (!line.isEmpty()) {
+                attributes.add(new ApparelAttribute(line));
+            }
+        }
+
+        return attributes;
+    }
+
+    public static void SaveApparelAttributes(
+            String file,
+            List<ApparelAttribute> attributes) {
+
+        try (FileWriter writer = new FileWriter(file)) {
+
+            writer.write("apparelID,ItemID,Size,Color,Supply");
+            writer.write(System.lineSeparator());
+
+            for (ApparelAttribute attribute : attributes) {
+
+                writer.write(attribute.DataToString());
+                writer.write(System.lineSeparator());
+            }
+
+            System.out.println("Apparel attributes saved successfully.");
+
+        } catch (IOException e) {
+
+            System.out.println("Error saving apparel attributes.");
+            e.printStackTrace();
+        }
+    }
 }

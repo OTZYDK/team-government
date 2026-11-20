@@ -13,9 +13,52 @@ import java.util.List;
 public class Main {
 
     
-    private static final String CSV_FILE = "app/items.csv";
+    private static final String CSV_FILE = "backend/src/data/items.csv";;
     private static final List<CatalogItem> library =
             new ArrayList<>();
+
+private static final String APPAREL_CSV_FILE =
+        "backend/src/data/apparelattributes.csv";
+
+private static final List<ApparelAttribute> apparelLibrary =
+        new ArrayList<>();
+
+private static ApparelAttribute findApparelVariant(
+        int itemID, String size, String color) {
+
+    for (ApparelAttribute attribute : apparelLibrary) {
+        if (attribute.getItemID() == itemID
+                && attribute.getSize().equalsIgnoreCase(size)
+                && attribute.getColor().equalsIgnoreCase(color)) {
+
+            return attribute;
+        }
+    }
+
+    return null;
+}
+
+
+
+private static void updateApparelTotalSupply(int itemID) {
+
+    int totalSupply = 0;
+
+    for (ApparelAttribute attribute : apparelLibrary) {
+        if (attribute.getItemID() == itemID) {
+            totalSupply += attribute.getSupply();
+        }
+    }
+
+    for (CatalogItem item : library) {
+        if (item.getID() == itemID) {
+            item.setSupply(totalSupply);
+            break;
+        }
+    }
+
+    CsvHandler.SaveLibrary(CSV_FILE, library);
+}
 
     public static void main(String[] args) throws Exception {
 
@@ -24,10 +67,21 @@ public class Main {
         //library.addAll(ItemCatalog.EnterQuery(Search.getAll()));
         library.addAll(CsvHandler.LoadLibrary(CSV_FILE));
 
+        apparelLibrary.addAll(CsvHandler.LoadApparelAttributes(APPAREL_CSV_FILE));
         System.out.println(
                 "Loaded " + library.size() + " items from CSV."
         );
 
+        System.out.println(
+                "Loaded " + apparelLibrary.size() + " apparel attributes from CSV."
+        );
+
+        for (CatalogItem item : library) {
+                if (item.getCategory().equalsIgnoreCase("APPAREL")) {
+                updateApparelTotalSupply(item.getID());
+                }
+        }
+        
         HttpServer server =
                 HttpServer.create(
                         new InetSocketAddress(8080),
@@ -37,6 +91,11 @@ public class Main {
         server.createContext(
                 "/api/items",
                 new ItemsHandler()
+        );
+
+        server.createContext(
+        "/api/apparel",
+        new ApparelHandler()
         );
 
         // Serve the static frontend (HTML, CSS, JS, images) from app/frontend/.
@@ -74,7 +133,8 @@ public class Main {
         // Resolve the file from the installed app's frontend folder.
         // jpackage copies --input contents into "app/", so frontend/ ends
         // up at C:\Program Files\DallasCollegeBookstore\app\frontend\.
-        java.io.File file = new java.io.File("app/frontend" + path);
+        java.io.File file = new java.io.File("frontend" + path);
+        
         if (!file.exists() || !file.isFile()) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
@@ -470,6 +530,180 @@ public void handle(HttpExchange exchange) throws IOException {
         }
     }
 
+
+
+static class ApparelHandler implements HttpHandler {
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+
+        String requestMethod = exchange.getRequestMethod();
+
+        if (!requestMethod.equalsIgnoreCase("GET")
+                && !requestMethod.equalsIgnoreCase("POST")) {
+        sendResponse(exchange, 405, "Method not allowed");
+        return;
+}
+
+        String[] pathParts =
+                exchange.getRequestURI().getPath().split("/");
+
+        if (pathParts.length < 4 || pathParts.length > 5) {
+            sendResponse(exchange, 400, "Invalid apparel URL");
+            return;
+        }
+
+        int itemID;
+
+        try {
+            itemID = Integer.parseInt(pathParts[3]);
+        } catch (NumberFormatException e) {
+            sendResponse(exchange, 400, "Invalid item ID");
+            return;
+        }
+
+
+// PURCHASE: /api/apparel/{itemID}/purchase
+if (requestMethod.equalsIgnoreCase("POST")
+        && pathParts.length == 5
+        && pathParts[4].equalsIgnoreCase("purchase")) {
+
+    String query = exchange.getRequestURI().getRawQuery();
+
+    if (query == null) {
+        sendResponse(exchange, 400, "Missing purchase details");
+        return;
+    }
+
+    String size = null;
+    String color = null;
+    int quantity = 0;
+
+    for (String parameter : query.split("&")) {
+        String[] pair = parameter.split("=", 2);
+
+        if (pair.length != 2) continue;
+
+        String key = java.net.URLDecoder.decode(
+                pair[0], StandardCharsets.UTF_8);
+
+        String value = java.net.URLDecoder.decode(
+                pair[1], StandardCharsets.UTF_8);
+
+        if (key.equalsIgnoreCase("size")) {
+            size = value;
+        } else if (key.equalsIgnoreCase("color")) {
+            color = value;
+        } else if (key.equalsIgnoreCase("quantity")) {
+            try {
+                quantity = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                sendResponse(exchange, 400, "Invalid quantity");
+                return;
+            }
+        }
+    }
+
+        if (size == null || color == null
+                || size.isBlank() || color.isBlank()
+                || quantity <= 0) {
+                sendResponse(exchange, 400, "Valid size, color, and quantity are required");
+                return;
+        }
+
+        ApparelAttribute variant =
+                findApparelVariant(itemID, size, color);
+
+        if (variant == null) {
+                sendResponse(exchange, 404, "Apparel variant not found");
+                return;
+        }
+
+        if (!variant.reduceSupply(quantity)) {
+                sendResponse(exchange, 409, "Insufficient inventory");
+                return;
+        }
+
+        CsvHandler.SaveApparelAttributes(
+                APPAREL_CSV_FILE, apparelLibrary);
+
+        updateApparelTotalSupply(itemID);
+
+        List<ApparelAttribute> result = new ArrayList<>();
+        result.add(variant);
+
+        sendResponse(exchange, 200, apparelToJson(result));
+        return;
+        }
+
+
+        // STOCK CHECK: /api/apparel/{itemID}/stock
+        if (pathParts.length == 5
+                && pathParts[4].equalsIgnoreCase("stock")) {
+
+            String query = exchange.getRequestURI().getRawQuery();
+
+            if (query == null) {
+                sendResponse(exchange, 400, "Missing size and color");
+                return;
+            }
+
+            String size = null;
+            String color = null;
+
+            for (String parameter : query.split("&")) {
+                String[] pair = parameter.split("=", 2);
+
+                if (pair.length != 2) continue;
+
+                String key = java.net.URLDecoder.decode(
+                        pair[0], StandardCharsets.UTF_8);
+
+                String value = java.net.URLDecoder.decode(
+                        pair[1], StandardCharsets.UTF_8);
+
+                if (key.equalsIgnoreCase("size")) {
+                    size = value;
+                } else if (key.equalsIgnoreCase("color")) {
+                    color = value;
+                }
+            }
+
+            if (size == null || color == null
+                    || size.isBlank() || color.isBlank()) {
+                sendResponse(exchange, 400, "Size and color are required");
+                return;
+            }
+
+            ApparelAttribute variant =
+                    findApparelVariant(itemID, size, color);
+
+            if (variant == null) {
+                sendResponse(exchange, 404, "Apparel variant not found");
+                return;
+            }
+
+            List<ApparelAttribute> result = new ArrayList<>();
+            result.add(variant);
+
+            sendResponse(exchange, 200, apparelToJson(result));
+            return;
+        }
+
+        // EXISTING VARIANT RETRIEVAL
+        List<ApparelAttribute> results = new ArrayList<>();
+
+        for (ApparelAttribute attribute : apparelLibrary) {
+            if (attribute.getItemID() == itemID) {
+                results.add(attribute);
+            }
+        }
+
+        sendResponse(exchange, 200, apparelToJson(results));
+    }
+}
+
+
     private static String readRequestBody(
             HttpExchange exchange) throws IOException {
 
@@ -664,6 +898,39 @@ public void handle(HttpExchange exchange) throws IOException {
 
         return json.toString();
     }
+        private static String apparelToJson(
+                List<ApparelAttribute> attributes) {
+
+        StringBuilder json = new StringBuilder();
+
+        json.append("[");
+
+        for (int i = 0; i < attributes.size(); i++) {
+
+                ApparelAttribute attribute = attributes.get(i);
+
+                if (i > 0) {
+                json.append(",");
+                }
+
+                json.append("{");
+                json.append("\"apparelID\":")
+                        .append(attribute.getApparelID()).append(",");
+                json.append("\"itemID\":")
+                        .append(attribute.getItemID()).append(",");
+                json.append("\"size\":\"")
+                        .append(attribute.getSize()).append("\",");
+                json.append("\"color\":\"")
+                        .append(attribute.getColor()).append("\",");
+                json.append("\"supply\":")
+                        .append(attribute.getSupply());
+                json.append("}");
+        }
+
+        json.append("]");
+
+        return json.toString();
+        }
 
     private static String libraryToJson(
             List<CatalogItem> items) {
