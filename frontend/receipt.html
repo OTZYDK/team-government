@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itemized Receipt | Dallas College Bookstore</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dallas College Bookstore</h1>
+        <p>Your campus finds, all in one place.</p>
+    </header>
+
+    <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="index.html#books">Shop</a>
+        <a href="cart.html">Cart <span class="cart-count" data-cart-count>0</span></a>
+        <a href="receipt.html" aria-current="page">Receipt</a>
+        <a href="login.html">Manager</a>
+    </nav>
+
+    <main>
+        <section class="cart-page-card receipt-page-card">
+            <div class="cart-page-heading">
+                <h2>Itemized Receipt</h2>
+                <p>Review the items and totals in your cart.</p>
+            </div>
+
+            <p id="receipt-status" class="receipt-status" role="status" aria-live="polite">Loading your receipt...</p>
+
+            <div id="receipt-content" hidden>
+                <div class="receipt-table-wrapper">
+                    <table class="receipt-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Item</th>
+                                <th scope="col">Item code</th>
+                                <th scope="col">Qty.</th>
+                                <th scope="col">Unit price</th>
+                                <th scope="col">Savings</th>
+                                <th scope="col">Tax</th>
+                                <th scope="col">Line total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="receipt-rows"></tbody>
+                    </table>
+                </div>
+
+                <section class="cart-summary" aria-label="Receipt total">
+                    <p><span>Subtotal</span><strong id="receipt-subtotal">$0.00</strong></p>
+                    <p class="receipt-savings-row"><span>Discount savings</span><strong id="receipt-savings">$0.00</strong></p>
+                    <p class="cart-tax-row"><span>Estimated tax</span><strong id="receipt-tax">$0.00</strong></p>
+                    <p class="cart-total-row"><span>Order total</span><strong id="receipt-total">$0.00</strong></p>
+                </section>
+            </div>
+
+            <div class="receipt-actions">
+                <a class="continue-shopping" href="cart.html">Return to cart</a>
+                <a class="continue-shopping" href="index.html#books">Continue shopping</a>
+                <button id="print-receipt" type="button">Print receipt</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Dallas College Bookstore</p>
+    </footer>
+
+    <script src="js/pricing.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/receipt.js"></script>
+</body>
+</html>
