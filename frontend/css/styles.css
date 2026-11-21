@@ -414,7 +414,6 @@ footer {
 
 /* =================================
    SHOPPING CART
-================================= */
 
 .cart-content {
     background-color: #f5f5f5;
@@ -449,7 +448,6 @@ footer {
 
 /* =================================
    CANCEL TRANSACTION
-================================= */
 
 .cancel-button {
     background-color: #b22222;
@@ -513,7 +511,6 @@ footer {
 
 /* =================================
    ITEMIZED RECEIPT
-================================= */
 
 .receipt-heading {
     margin-bottom: 20px;
@@ -1324,9 +1321,7 @@ button:hover,
     padding: 12px;
     background-color: #006633;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+
 }
 
 #verify-employee-id:hover {
@@ -1586,6 +1581,157 @@ footer {
     list-style: none;
 }
 
+
+.cart-content {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.cart-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.cart-actions button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#view-cart {
+    background-color: #006747;
+    color: white;
+}
+
+#view-cart:hover {
+    background-color: #004d35;
+}
+
+/* =================================
+   CANCEL TRANSACTION
+
+.cancel-button {
+    background-color: #b22222;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #8b0000;
+}
+
+.cancel-confirmation {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #b22222;
+    border-radius: 8px;
+    background-color: #fff3f3;
+}
+
+.cancel-confirmation summary {
+    color: #8b0000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.confirmation-content {
+    margin-top: 15px;
+}
+
+.confirmation-content h3 {
+    color: #8b0000;
+}
+
+.confirmation-content button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#confirm-cancel {
+    background-color: #b22222;
+    color: white;
+}
+
+#keep-shopping {
+    background-color: #006747;
+    color: white;
+}
+
+.cancel-notice {
+    color: #555;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+#cancel-message {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* =================================
+   ITEMIZED RECEIPT
+
+.receipt-heading {
+    margin-bottom: 20px;
+}
+
+.receipt-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.receipt-table th,
+.receipt-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.receipt-table th {
+    background-color: #006747;
+    color: white;
+}
+
+.receipt-table tfoot {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+.receipt-thanks {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.print-button {
+    background-color: #006747;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.print-button:hover {
+    background-color: #004d35;
+}
+@media screen and (max-width: 600px) {
+
+    .cart-actions {
+        flex-direction: column;
 .checkout-steps li {
     display: inline-flex;
     align-items: center;
@@ -1953,6 +2099,8 @@ footer {
         gap: 6px;
         font-size: 0.8rem;
     }
+}
+@media print {
 
     .checkout-steps li > span {
         width: 27px;
@@ -2232,6 +2380,13 @@ footer {
     border-bottom: 0;
 }
 
+
+.inline-option {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    font-weight: normal !important;
 .inventory-table tbody tr:hover {
     background: #f8faf7;
 }
@@ -2445,6 +2600,12 @@ footer {
     gap: 3px;
     white-space: nowrap;
 }
+@media screen and (max-width: 600px) {
+    .search-form,
+    #category-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
 .receipt-savings-cell {
     color: #23633f;
@@ -2461,4 +2622,93 @@ footer {
         grid-column: 1 / -1;
         align-items: flex-start;
     }
+
+    .receipt-table {
+        width: 100%;
+    }
+
+    .receipt-table th {
+        background-color: #ddd !important;
+        color: black !important;
+    }
+
+
+#sales-history {
+    margin-top: 25px;
+}
+
+.sales-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.sales-summary-card {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    background-color: #f2f7f3;
+    border-left: 5px solid #006633;
+    border-radius: 8px;
+}
+
+.sales-summary-card h3 {
+    color: #006633;
+    margin-top: 0;
+}
+
+.sales-summary-card p {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+#sales-history .receipt-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#sales-history .receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#sales-history .receipt-table th,
+#sales-history .receipt-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#sales-history .receipt-table th {
+    background-color: #006633;
+    color: white;
+}
+
+#sales-history .receipt-table tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+#sales-history-message {
+    margin-top: 15px;
+    color: #006633;
+}
+
+/* Responsive Sales History */
+@media screen and (max-width: 768px) {
+    .sales-summary {
+        flex-direction: column;
+    }
+
+    .sales-summary-card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #sales-history .receipt-table {
+        min-width: 850px;
+    }
+}
 }
